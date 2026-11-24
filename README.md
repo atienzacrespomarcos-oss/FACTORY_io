@@ -4,7 +4,7 @@ Simulador web de fábrica con PLC virtual. Montas una línea (cintas, sensores, 
 la programas en **Structured Text** o **Ladder** (subconjunto de IEC 61131-3) y la pones en marcha,
 todo en el navegador y sin hardware.
 
-**Jugar:** <https://atienzacrespomarcos-oss.github.io/FACTORY_io/> (misiones) · [modo libre](https://atienzacrespomarcos-oss.github.io/FACTORY_io/app/)
+**Jugar:** <https://atienzacrespomarcos-oss.github.io/FACTORY_io/> (inicio: Fábrica viva, Academia y modo libre)
 (Chrome o Edge recomendados; en Chrome la interfaz se traduce sola al español con el traductor del navegador).
 
 ## Origen y licencia
@@ -25,7 +25,7 @@ El primer commit de este repositorio es ese código sin modificar; los cambios p
 | F0 | Fork, marca propia, publicación automática en GitHub Pages | hecho |
 | F1 | Tutor con Claude Code (pista / explicar / hacer), sin API de pago: ver [tutor/LEEME.md](tutor/LEEME.md) | hecho |
 | F2 | Misiones con juez automático y progreso: ver [misiones/](misiones/) y la página `/misiones/` | hecho (4 misiones) |
-| F3 | Temática: centro logístico (misiones 5 y 6: clasificación por color y por código de barras) | en curso |
+| F3 | Temática: centro logístico. Fábrica viva (planta que crece por etapas) + Academia (7 ejercicios sueltos) | en curso: etapas 1 y 2 |
 | F4 | Pulido | pendiente |
 
 ## Desarrollo local
@@ -51,7 +51,21 @@ Con un repositorio `<usuario>.github.io` el prefijo es vacío y el paso no cambi
 GitHub Pages no permite las cabeceras COOP/COEP, así que la física y el PLC funcionan en un solo hilo
 (la app lo detecta y cae a ese modo sola).
 
-## Misiones
+## Fábrica viva
+
+El modo principal: una única planta, la tuya, que crece. Diseño y progresión en
+[fabrica-viva/DISENO.md](fabrica-viva/DISENO.md).
+
+- `fabrica-viva/etapa-<N>/`: la planta acumulada hasta esa etapa (`proyecto/`), la solución de referencia,
+  el fragmento de programa que se añade al ampliar (`fragmento-*.st`) y la ficha (`etapa.json`: encargo,
+  objetivos en directo, pistas, piezas que retira y parámetros que ajusta).
+- `npm run check-fabrica-viva` comprueba cada etapa: la solución pasa todo; la solución de la etapa anterior
+  más el fragmento nuevo (unidos con la misma función que la app) compila, mantiene las pruebas anteriores y
+  falla las nuevas; y ampliar la planta anterior da exactamente la planta de la etapa.
+- En la app: `/app/?fabrica=viva` abre tu fábrica; el panel de encargos lee los objetivos en directo, el juez
+  certifica la etapa y «Ampliar la fábrica» une la etapa siguiente con tu planta (`src/editor/fabricaViva/`).
+
+## Academia (misiones)
 
 Cada misión es una carpeta `misiones/<id>/`:
 

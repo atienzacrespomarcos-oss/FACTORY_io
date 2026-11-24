@@ -64,8 +64,9 @@ export function openingView(store: EditorStore): { px: number; py: number; pz: n
  * Seen from the front (+Z) and a little to the right and above, at a distance that fits the parts' extent.
  * Null for an empty scene, which keeps the default.
  */
-function lineOpeningView(parts: readonly { kind?: string; position?: readonly number[] }[]): { px: number; py: number; pz: number; tx: number; ty: number; tz: number } | null {
-  const ps = parts.filter((p) => p.kind !== 'building' && Array.isArray(p.position) && p.position.length === 3)
+function lineOpeningView(parts: readonly { type?: string; position?: readonly number[] }[]): { px: number; py: number; pz: number; tx: number; ty: number; tz: number } | null {
+  // the building is the backdrop, not the line: its centre would pull the view off the parts
+  const ps = parts.filter((p) => p.type !== 'building' && Array.isArray(p.position) && p.position.length === 3)
   if (ps.length === 0) return null
   let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity
   for (const p of ps) {

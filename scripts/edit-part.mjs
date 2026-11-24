@@ -34,7 +34,7 @@ const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const argv = process.argv.slice(2)
 const usage = (why) => {
   if (why) console.error(`✗ ${why}`)
-  console.error('usage: npm run edit-part -- <project-folder> <partId> [--params k=v,...] [--at x,y,z] [--rot <deg>] [--name <text>] [--visible true|false] [--docks]')
+  console.error('usage: npm run edit-part -- <project-folder> <partId> [--params k=v,...] [--at x,y,z] [--rot <deg>] [--name <text>] [--visible true|false] [--remove] [--docks]')
   process.exit(2)
 }
 const positional = []
@@ -42,6 +42,7 @@ const o = {}
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i]
   if (a === '--docks') o.docks = true
+  else if (a === '--remove') o.remove = true // Fábrica PLC: retira la pieza y lo que cuelga de ella
   else if (a === '--visible') {
     // Fábrica PLC: show or hide a part's visuals; a hidden part still collides and simulates (core/types/base.ts)
     const v = argv[++i]
@@ -67,7 +68,7 @@ for (let i = 0; i < argv.length; i++) {
 const [folder, partId, ...extra] = positional
 if (!folder || !partId) usage()
 if (extra.length) usage(`one part at a time (got ${[partId, ...extra].join(', ')})`)
-const edits = o.params !== undefined || o.at !== undefined || o.rot !== undefined || o.name !== undefined || o.visible !== undefined
+const edits = o.params !== undefined || o.at !== undefined || o.rot !== undefined || o.name !== undefined || o.visible !== undefined || o.remove === true
 if (!edits && !o.docks) usage('nothing to change: give --params, --at, --rot or --name (or --docks to list a building\'s dock doors)')
 
 const r6 = (n) => Math.round(n * 1e6) / 1e6
@@ -108,6 +109,18 @@ try {
     throw new Error('not a building')
   }
   const lines = []
+  if (o.remove) {
+    // la pieza y todo lo que cuelga de ella (parent), como al borrarla en el editor
+    const gone = new Set([partId])
+    for (let grew = true; grew; ) {
+      grew = false
+      for (const p of scene.parts) if (p.parent && gone.has(p.parent) && !gone.has(p.id)) { gone.add(p.id); grew = true }
+    }
+    scene.parts = scene.parts.filter((p) => !gone.has(p.id))
+    lib.save()
+    console.log(`removed ${[...gone].join(', ')}`)
+    throw Object.assign(new Error('done'), { done: true })
+  }
   if (o.params !== undefined && part.type === 'building') {
     const { parseParamArgs } = await vite.ssrLoadModule('/src/core/parts/partParamArgs.ts')
     const notes = []
@@ -192,7 +205,9 @@ try {
 next: npm run check-layout -- ${folder}   then   npm run test-project -- ${folder}`)
   }
 } catch (e) {
-  if (exit === 0) {
+  if (e.done) {
+    // --remove ya terminó y guardó
+  } else if (exit === 0) {
     console.error(`✗ ${e.message}`)
     exit = 2
   }

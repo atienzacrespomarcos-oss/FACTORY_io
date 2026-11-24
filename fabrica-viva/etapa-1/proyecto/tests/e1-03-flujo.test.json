@@ -1,0 +1,13 @@
+{
+  "name": "E1 · Las cajas del camión recorren la recepción hasta el final sin caer al suelo",
+  "duration": 45,
+  "inputs": [
+    { "at": 1.0, "tag": "Marcha", "value": true },
+    { "at": 1.3, "tag": "Marcha", "value": false }
+  ],
+  "checks": [
+    { "eventually": true, "tag": "FotocelulaRecepcion", "equals": true },
+    { "eventually": true, "tag": "CajasRecibidas", "min": 10 },
+    { "always": true, "max": 0, "probe": { "count": { "zone": { "min": [-1, -1, -6], "max": [14, 0.45, 6] } } } }
+  ]
+}

@@ -4,33 +4,65 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fábrica PLC</title>
-    <meta name="description" content="Simulador web de fábrica con PLC virtual (IEC 61131-3). Basado en Open Industry Project (MIT)." />
+    <meta name="description" content="Simulador web de fábrica con PLC virtual (IEC 61131-3): una planta logística que crece contigo. Basado en Open Industry Project (MIT)." />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#17181b" />
-    <script>
-      // La portada lleva a las misiones; ?portada la deja a la vista.
-      if (!new URLSearchParams(location.search).has('portada')) location.replace('/misiones/' + location.hash)
-    </script>
     <style>
       :root { color-scheme: dark; }
-      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #17181b; color: #eceae6;
-             font: 16px/1.5 Inter, 'Segoe UI', Roboto, Arial, sans-serif; }
-      main { max-width: 560px; padding: 32px 16px; text-align: center; }
-      img { width: min(100%, 360px); height: auto; }
-      a.boton { display: inline-block; margin: 24px 0; padding: 12px 28px; border-radius: 8px; background: #e8731c;
-                color: #17181b; font-weight: 700; text-decoration: none; }
-      p.creditos { color: #9aa3ae; font-size: 13px; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: #17181b; color: #eceae6;
+             font: 16px/1.55 Inter, 'Segoe UI', Roboto, Arial, sans-serif; }
+      main { max-width: 920px; margin: 0 auto; padding: 40px 16px 24px; }
+      .logo { width: min(100%, 320px); height: auto; display: block; margin: 0 auto 8px; }
+      .lema { text-align: center; color: #c8cdd3; margin: 0 0 32px; }
+      .opciones { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+      @media (max-width: 720px) { .opciones { grid-template-columns: 1fr; } }
+      .op { display: flex; flex-direction: column; background: #202328; border: 1px solid #343941; border-radius: 12px;
+            padding: 20px; color: inherit; text-decoration: none; }
+      .op:hover { border-color: #4a515b; }
+      .op.principal { border-color: #e8731c; background: linear-gradient(180deg, #2a2119 0%, #202328 60%); }
+      .op h2 { margin: 0 0 6px; font-size: 22px; }
+      .op p { margin: 0 0 14px; color: #c8cdd3; }
+      .op ul { margin: 0 0 16px; padding-left: 18px; color: #c8cdd3; }
+      .op .ir { margin-top: auto; align-self: flex-start; padding: 9px 18px; border-radius: 8px; background: #e8731c;
+                color: #17181b; font-weight: 700; }
+      .op.secundaria .ir { background: #343941; color: #eceae6; }
+      .apilada { display: grid; gap: 16px; }
+      p.creditos { color: #9aa3ae; font-size: 13px; text-align: center; margin-top: 36px; }
       p.creditos a { color: #c8cdd3; }
     </style>
   </head>
   <body>
     <main>
-      <img src="/oip-logo.svg" alt="Fábrica PLC" />
-      <p>Monta tu fábrica, programa su PLC virtual y ponla en marcha.</p>
-      <a class="boton" href="/misiones/">Misiones</a>
-      <p><a href="/app/">Modo libre</a></p>
+      <img class="logo" src="/oip-logo.svg" alt="Fábrica PLC" />
+      <p class="lema">Programa el PLC de un centro logístico que crece contigo.</p>
+      <div class="opciones">
+        <a class="op principal" href="/app/?fabrica=viva">
+          <h2>Fábrica viva</h2>
+          <p>Tu planta, siempre en marcha. Te llegan encargos; al cumplirlos, la fábrica se amplía con zonas nuevas
+            que se suman a lo que ya has construido y programado.</p>
+          <ul>
+            <li>Objetivos en directo mientras la planta produce.</li>
+            <li>Un juez que comprueba la zona nueva y todo lo anterior.</li>
+            <li>Cada ampliación exige una forma de programar más avanzada.</li>
+          </ul>
+          <span class="ir">Entrar en mi fábrica</span>
+        </a>
+        <div class="apilada">
+          <a class="op secundaria" href="/misiones/">
+            <h2>Academia</h2>
+            <p>Ejercicios cortos para entrenar conceptos sueltos.</p>
+            <span class="ir">Abrir la Academia</span>
+          </a>
+          <a class="op secundaria" href="/app/">
+            <h2>Modo libre</h2>
+            <p>El simulador sin encargos: monta lo que quieras.</p>
+            <span class="ir">Abrir el simulador</span>
+          </a>
+        </div>
+      </div>
       <p class="creditos">
         Basado en <a href="https://github.com/Open-Industry-Project/Open-Industry-Project">Open Industry Project</a>
         (licencia MIT, © Automation Standard LLC and Contributors). Proyecto independiente, sin afiliación.

@@ -45,6 +45,7 @@ const FETCHES_NO_APP_ASSET: Record<string, string> = {
   'plc/link/plcLink.ts': 'talks to a PLC bridge, not to app assets',
   'collab/roomAssets.ts': "fetches a room's part assets from the collab server by SHA-256: the name is the content",
   'editor/misiones/misiones.ts': 'reads the mission list and .oip files with cache: no-cache, so every read revalidates; they are not built assets',
+  'editor/fabricaViva/fabricaViva.ts': 'reads the living factory stages and .oip files with cache: no-cache, so every read revalidates; they are not built assets',
 }
 
 describe('every network fetch in src/ versions its asset URL', () => {

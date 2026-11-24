@@ -1,0 +1,14 @@
+{
+  "orden": 1,
+  "titulo": "Recepción",
+  "encargo": "Llega el primer camión al muelle de recepción. Pon en marcha la línea, descarga las cajas y llévalas hasta el final de la recepción, con la seta de emergencia y la baliza funcionando como en una planta real.",
+  "objetivos": [
+    { "etiqueta": "Cajas recibidas", "tag": "CajasRecibidas", "meta": 30 }
+  ],
+  "aprenderas": ["Enclavamiento de marcha y paro", "Señales normalmente cerradas (seta de emergencia)", "Salidas por bits (baliza)"],
+  "pistas": [
+    "La seta vale TRUE mientras está libre. Si la pones en la condición de la memoria de marcha, al pulsarla se borra la memoria y al soltarla no vuelve sola.",
+    "La baliza es un número: cada bit enciende una luz. Verde es 1, ámbar 2 y rojo 4.",
+    "Decide la baliza con IF ... ELSIF ... ELSE: primero la emergencia, después la marcha y, si no, parada."
+  ]
+}

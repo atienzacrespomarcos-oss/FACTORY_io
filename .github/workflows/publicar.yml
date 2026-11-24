@@ -33,6 +33,8 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Validar misiones (el inicio no supera el juez, la solución sí)
         run: npm run check-misiones
+      - name: Validar la fábrica viva (cada etapa, su ampliación y la regresión)
+        run: npm run check-fabrica-viva
       - name: Compilar
         run: npm run build
         env:

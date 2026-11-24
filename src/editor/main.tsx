@@ -718,6 +718,18 @@ function startSolo(): void {
     prefetchSceneAssets(store.getState().scene)
     void xremu.then(mount).catch((e: unknown) => console.error('[oip] the editor failed to mount', e))
     // Fábrica PLC: /app/?mision=<id> abre esa misión (misiones/misiones.ts); el módulo solo se carga si se pide
+    // Fábrica PLC: /app/?fabrica=viva abre (o crea) la Fábrica viva de quien juega (fabricaViva/)
+    if (new URLSearchParams(location.search).get('fabrica') === 'viva') {
+      const url = new URL(location.href)
+      url.searchParams.delete('fabrica')
+      history.replaceState(history.state, '', url.pathname + url.search + url.hash)
+      void import('./fabricaViva/fabricaViva')
+        .then((m) => m.abrirFabricaViva(store))
+        .then((error) => {
+          if (error) alert(error)
+        })
+        .catch((e: unknown) => console.error('[fabrica-plc] fábrica viva', e))
+    }
     if (new URLSearchParams(location.search).has('mision')) {
       void import('./misiones/misiones').then((m) => m.abrirMisionPedida(store)).catch((e: unknown) => console.error('[fabrica-plc] misión', e))
     }

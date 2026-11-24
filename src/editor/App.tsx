@@ -145,6 +145,7 @@ const TestResultsOverlay = lazy(() => import('./components/TestResultsOverlay').
 // LAZY: the watch dock is a background tab until a program is being debugged, and it brings the declaration reader
 const WatchPanel = lazy(() => import('./components/plc/WatchPanel').then((m) => ({ default: m.WatchPanel })))
 const AgentActivity = lazy(() => import('./components/AgentActivity').then((m) => ({ default: m.AgentActivity })))
+const FabricaVivaPanel = lazy(() => import('./fabricaViva/FabricaVivaPanel').then((m) => ({ default: m.FabricaVivaPanel }))) // Fábrica PLC
 
 const M = defineMessages('app', {
   tabScene: 'Scene',
@@ -1362,6 +1363,7 @@ export function App({ store, sim }: AppProps) {
             <AgentActivity session={agentSession} store={store} state={state} controller={controller} />
           </Suspense>
         )}
+        {state.projectName === 'Fábrica viva' && !presenting && state.mode !== 'pilot' && <Suspense fallback={null}><FabricaVivaPanel store={store} state={state} controller={controller} /></Suspense>}
         {!viewError && <ViewportLoadingCover />}
         {view && getCollabContext() && !presenting && <PresenceOverlay view={view} />}
       </div>

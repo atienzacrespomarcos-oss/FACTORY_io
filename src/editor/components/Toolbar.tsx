@@ -136,7 +136,7 @@ const M = defineMessages('toolbar', {
   openDesktopRoom: 'Opens this shared project in the desktop app',
   openDesktopCopy: 'Opens a copy of this project in the desktop app; this browser keeps its own',
   github: 'Fábrica PLC en GitHub',
-  missions: 'Missions',
+  missions: 'Home: living factory and academy',
   runTests: 'Run tests',
   runTestsTitle: "Run this project's tests. In a mission they are the judge: pass them all to complete it",
 })
@@ -357,7 +357,7 @@ export function Toolbar({ store, state, controller }: ToolbarProps) {
             decorative. oip-icon.svg is the mark as true vector; the old oip-mark.svg was a TRACED 16px
             bitmap, so at the 24px this renders at it was an upscale of a blurry downscale. */}
         {!DESKTOP_SHELL && (
-          <a className="toolbar-logo-link" href="/misiones/" title={t(M.missions)}>
+          <a className="toolbar-logo-link" href="/" title={t(M.missions)}>
             <img className="toolbar-logo" src="/oip-icon.svg" alt="" aria-hidden="true" />
           </a>
         )}

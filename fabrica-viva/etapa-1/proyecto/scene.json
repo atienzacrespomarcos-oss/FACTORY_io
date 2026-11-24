@@ -1,0 +1,218 @@
+{
+  "version": 4,
+  "parts": [
+    {
+      "id": "bld_1",
+      "type": "building",
+      "position": [
+        24,
+        0,
+        5
+      ],
+      "rotationY": 0,
+      "params": {
+        "lengthSections": 5,
+        "widthSections": 4,
+        "heightSections": 1,
+        "columnSpacing": 0,
+        "rules": [
+          {
+            "wall": "dock_door",
+            "run": 1,
+            "gap": 0,
+            "count": 1,
+            "start": 11,
+            "doorCount": 1,
+            "trailer": true
+          },
+          {
+            "wall": "dock_door",
+            "run": 1,
+            "gap": 0,
+            "count": 1,
+            "start": 15,
+            "doorCount": 2,
+            "trailer": true
+          }
+        ],
+        "floorVisible": true,
+        "wallsVisible": true,
+        "roofVisible": true,
+        "brightness": 1,
+        "backgroundColor": "#9fb1c4",
+        "openDoors": [
+          "11:0"
+        ]
+      },
+      "name": "Nave",
+      "locked": true
+    },
+    {
+      "id": "fv1-alimentador",
+      "type": "part",
+      "packageId": "oip.box-spawner",
+      "position": [
+        0.45,
+        1.25,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "boxesPerMinute": 24,
+        "fixedRate": false,
+        "boxColors": "#c8a06a,#b48a56",
+        "keepSpacing": true,
+        "conveyorId": "fv1-cinta-1",
+        "runTag": "Alimentador"
+      },
+      "name": "Camión (descarga)"
+    },
+    {
+      "id": "fv1-cinta-1",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        0.085,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaRecepcion",
+        "standHeight": 0.8
+      },
+      "name": "Cinta de recepción 1"
+    },
+    {
+      "id": "fv1-cinta-2",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        5.255,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaRecepcion",
+        "standHeight": 0.8
+      },
+      "name": "Cinta de recepción 2"
+    },
+    {
+      "id": "fv1-fotocelula",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        9.74,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaRecepcion",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula fin de recepción"
+    },
+    {
+      "id": "fv1-marcha",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.3,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "text": "MARCHA",
+        "buttonColor": "#2e9e44",
+        "tag": "Marcha"
+      },
+      "parent": "fv1-cinta-1",
+      "name": "Pulsador Marcha"
+    },
+    {
+      "id": "fv1-paro",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.55,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "text": "PARO",
+        "tag": "Paro"
+      },
+      "parent": "fv1-cinta-1",
+      "name": "Pulsador Paro"
+    },
+    {
+      "id": "fv1-seta",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.8,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "emergencyStop": true,
+        "tag": "Seta"
+      },
+      "parent": "fv1-cinta-1",
+      "name": "Seta de emergencia"
+    },
+    {
+      "id": "fv1-sumidero",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        11.34,
+        0,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasRecibidas"
+      },
+      "name": "Sumidero (fin de recepción)",
+      "visible": false
+    },
+    {
+      "id": "fv1-baliza",
+      "type": "part",
+      "packageId": "oip.stack-light",
+      "position": [
+        1.2,
+        0.85,
+        -0.79
+      ],
+      "rotationY": 0,
+      "params": {
+        "tag": "Baliza"
+      },
+      "name": "Baliza"
+    }
+  ]
+}

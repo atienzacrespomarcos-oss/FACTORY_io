@@ -101,3 +101,4 @@ Examples_Dont_Commit/
 # Fábrica PLC: salida de scripts/build-misiones.mjs
 public/misiones/*.oip
 public/misiones/index.json
+public/fabrica-viva/

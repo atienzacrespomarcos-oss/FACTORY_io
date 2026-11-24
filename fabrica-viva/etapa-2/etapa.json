@@ -1,0 +1,19 @@
+{
+  "orden": 2,
+  "titulo": "Control de entrada",
+  "encargo": "El proveedor manda cajas sin etiqueta mezcladas con las buenas. Amplía la línea con una zona de control: lee la etiqueta de cada caja, aparta las que no la llevan y vigila la nueva cinta contra atascos. Un atasco debe parar toda la línea.",
+  "objetivos": [
+    { "etiqueta": "Cajas etiquetadas al final de la línea", "tag": "CajasFinLinea", "meta": 30 },
+    { "etiqueta": "Cajas sin etiqueta rechazadas", "tag": "CajasRechazadas", "meta": 10 }
+  ],
+  "aprenderas": ["Bloques de función propios (FUNCTION_BLOCK) e instancias", "Integrar una zona nueva con el código que ya tenías", "Rechazo con memoria, retardo y pulso"],
+  "pistas": [
+    "Empieza por FB_Cinta: un TON con IN := Presencia AND Motor detecta la caja parada; Atasco se activa con su Q y se borra con Rearme.",
+    "Llama a la instancia: Control(Habilitar := ..., Presencia := FotocelulaAtasco, Rearme := Rearme); y usa Control.Motor y Control.Atasco.",
+    "Para que el atasco pare toda la línea, añade «AND NOT AlarmaAtasco» a la memoria de marcha de tu código de la etapa 1."
+  ],
+  "retira": ["fv1-sumidero"],
+  "ajustes": [
+    { "id": "fv1-alimentador", "params": { "mixAttribute": "code", "mixValues": "101,102,0,103,0,104", "boxColors": "#c8a06a,#c8a06a,#d9d9d9,#c8a06a,#d9d9d9,#c8a06a" } }
+  ]
+}

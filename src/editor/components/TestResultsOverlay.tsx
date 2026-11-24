@@ -71,6 +71,9 @@ export function TestResultsOverlay({ project, onClose }: TestResultsOverlayProps
         import('../misiones/misiones')
           .then((m) => m.registrarResultadoMision(project, all))
           .catch((e: unknown) => console.warn('[fabrica-plc] progreso de misión', e))
+        import('../fabricaViva/fabricaViva')
+          .then((m) => m.registrarJuezFabrica(project, all))
+          .catch((e: unknown) => console.warn('[fabrica-plc] juez de la fábrica viva', e))
       })
       .catch((e: unknown) => {
         if (!live) return
