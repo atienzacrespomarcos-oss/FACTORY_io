@@ -27,13 +27,13 @@ en la nube no puede ver tus carpetas locales.
 
 1. **Instala la skill.** En una sesión local de Claude Code, pide:
 
-   > Descarga https://raw.githubusercontent.com/atienzacrespomarcos-oss/atienzacrespomarcos-oss.github.io/main/tutor/tutor-plc/SKILL.md
+   > Descarga https://raw.githubusercontent.com/atienzacrespomarcos-oss/FACTORY_io/main/tutor/tutor-plc/SKILL.md
    > y guárdalo en `~/.claude/skills/tutor-plc/SKILL.md`
 
    En Windows, `~` es tu carpeta de usuario (`C:\Users\<tú>`). También puedes copiar a mano la carpeta
    `tutor/tutor-plc` de este repositorio a `~/.claude/skills/`.
 
-2. **Vincula tu proyecto a una carpeta.** En <https://atienzacrespomarcos-oss.github.io/app/> (Chrome o Edge),
+2. **Vincula tu proyecto a una carpeta.** En <https://atienzacrespomarcos-oss.github.io/FACTORY_io/app/> (Chrome o Edge),
    usa **Save Project to Folder…** para guardar el proyecto en una carpeta nueva (por ejemplo
    `Documentos/FabricaPLC/mi-linea`), o **Link Project Folder…** para abrir una que ya tengas.
    El navegador te pedirá permiso de edición sobre esa carpeta.

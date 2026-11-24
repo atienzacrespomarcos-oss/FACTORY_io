@@ -159,7 +159,7 @@ function withCommandKey(label: string, id: string): string {
   return chord ? t(M.withChord, { label, chord }) : label
 }
 
-const GITHUB_URL = 'https://github.com/atienzacrespomarcos-oss/atienzacrespomarcos-oss.github.io'
+const GITHUB_URL = 'https://github.com/atienzacrespomarcos-oss/FACTORY_io'
 
 interface ToolbarProps {
   store: EditorStore

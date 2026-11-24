@@ -31,7 +31,7 @@ pregunta cuál quiere con estas tres opciones:
 4. Si `AGENTS.md` no existe, el proyecto no está vinculado a la carpeta: indícale que en la app use
    **Link Project Folder…** o **Save Project to Folder…** (Chrome o Edge) y que vuelva a invocarte.
 5. Si la duda es si el motor admite una construcción del lenguaje, consulta
-   <https://atienzacrespomarcos-oss.github.io/plc/> (página generada probando el motor). Si no puedes consultarla,
+   <https://atienzacrespomarcos-oss.github.io/FACTORY_io/plc/> (página generada probando el motor). Si no puedes consultarla,
    dilo y elige la construcción más sencilla.
 
 ## Reglas al escribir en el proyecto (modo `hacer`, o tests en cualquier modo si el usuario lo pide)

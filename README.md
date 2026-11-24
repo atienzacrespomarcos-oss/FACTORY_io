@@ -4,7 +4,7 @@ Simulador web de fábrica con PLC virtual. Montas una línea (cintas, sensores, 
 la programas en **Structured Text** o **Ladder** (subconjunto de IEC 61131-3) y la pones en marcha,
 todo en el navegador y sin hardware.
 
-**Jugar:** <https://atienzacrespomarcos-oss.github.io/app/>
+**Jugar:** <https://atienzacrespomarcos-oss.github.io/FACTORY_io/app/>
 (Chrome o Edge recomendados; en Chrome la interfaz se traduce sola al español con el traductor del navegador).
 
 ## Origen y licencia
@@ -22,8 +22,8 @@ El primer commit de este repositorio es ese código sin modificar; los cambios p
 
 | Fase | Contenido | Estado |
 |---|---|---|
-| F0 | Fork, marca propia, publicación automática en GitHub Pages | en curso |
-| F1 | Tutor con Claude Code (recomendar / explicar / hacerlo explicando), sin API de pago | pendiente |
+| F0 | Fork, marca propia, publicación automática en GitHub Pages | hecho |
+| F1 | Tutor con Claude Code (pista / explicar / hacer), sin API de pago: ver [tutor/LEEME.md](tutor/LEEME.md) | hecho |
 | F2 | Capa de juego: misiones con juez automático, puntuación y progresión | pendiente |
 | F3 | Temática de la fábrica | pendiente |
 | F4 | Pulido | pendiente |
@@ -40,3 +40,13 @@ npm run build   # salida en dist/
 ```
 
 La documentación técnica heredada del proyecto original está en [docs/](docs/README.md) (en inglés).
+
+## Publicación
+
+`.github/workflows/publicar.yml` compila y publica en GitHub Pages en cada push a `main`. La app escribe sus URLs
+desde la raíz (`/models`, `/app/`…); como este repositorio se sirve en `/FACTORY_io/`,
+[scripts/rebase-dist.mjs](scripts/rebase-dist.mjs) antepone ese prefijo a las rutas del build antes de publicarlo.
+Con un repositorio `<usuario>.github.io` el prefijo es vacío y el paso no cambia nada.
+
+GitHub Pages no permite las cabeceras COOP/COEP, así que la física y el PLC funcionan en un solo hilo
+(la app lo detecta y cae a ese modo sola).
