@@ -1,0 +1,98 @@
+{
+  "version": 4,
+  "parts": [
+    {
+      "id": "box-spawner-1",
+      "type": "part",
+      "packageId": "oip.box-spawner",
+      "position": [
+        0.45,
+        1.25,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "keepSpacing": true,
+        "conveyorId": "belt-conveyor-1",
+        "runTag": "Alimentador"
+      }
+    },
+    {
+      "id": "belt-conveyor-1",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        0.085,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "standHeight": 0.8,
+        "runTag": "CintaMarcha"
+      }
+    },
+    {
+      "id": "diffuse-sensor-1",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        3.57,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "maxRange": 1.564,
+        "tag": "FotocelulaSalida"
+      }
+    },
+    {
+      "id": "push-button-1",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.3,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "text": "START",
+        "buttonColor": "#2e9e44",
+        "tag": "Marcha"
+      },
+      "parent": "belt-conveyor-1"
+    },
+    {
+      "id": "push-button-2",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.55,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "Paro"
+      },
+      "parent": "belt-conveyor-1"
+    },
+    {
+      "id": "despawner-1",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        5.17,
+        0,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasSalida"
+      }
+    }
+  ]
+}

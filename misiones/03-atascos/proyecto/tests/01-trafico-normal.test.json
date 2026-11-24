@@ -1,0 +1,14 @@
+{
+  "name": "El tráfico normal pasa por la fotocélula sin disparar la alarma de atasco",
+  "duration": 12,
+  "inputs": [
+    { "at": 0.5, "tag": "Marcha", "value": true },
+    { "at": 0.6, "tag": "Marcha", "value": false }
+  ],
+  "checks": [
+    { "eventually": true, "tag": "Fotocelula", "equals": true },
+    { "always": true, "tag": "AlarmaAtasco", "equals": false },
+    { "at": 11.5, "tag": "CintaMarcha", "equals": true },
+    { "eventually": true, "probe": { "count": { "zone": { "min": [2.9, 0.8, -0.7], "max": [4.1, 1.4, 0.7] } } }, "min": 1 }
+  ]
+}

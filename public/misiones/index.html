@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Misiones · Fábrica PLC</title>
+    <meta name="description" content="Misiones de programación PLC con juez automático: monta, programa y supera cada reto." />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#17181b" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #17181b;
+        --panel: #202328;
+        --panel-2: #272b31;
+        --line: #343941;
+        --text: #eceae6;
+        --dim: #a3abb5;
+        --accent: #e8731c;
+        --ok: #4caf72;
+        --warn: #d9a63a;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.55 Inter, 'Segoe UI', Roboto, Arial, sans-serif; }
+      a { color: inherit; }
+      header { border-bottom: 1px solid var(--line); }
+      .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px; }
+      .top { display: flex; align-items: center; gap: 16px; padding: 14px 0; flex-wrap: wrap; }
+      .top img { height: 44px; width: auto; }
+      .top nav { margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap; }
+      .btn { display: inline-block; padding: 8px 14px; border-radius: 7px; border: 1px solid var(--line); background: var(--panel-2);
+             color: var(--text); text-decoration: none; font-weight: 600; font-size: 14px; cursor: pointer; }
+      .btn:hover { border-color: #4a515b; }
+      .btn.primary { background: var(--accent); border-color: var(--accent); color: #17181b; }
+      h1 { font-size: 26px; margin: 28px 0 6px; }
+      .lead { color: var(--dim); margin: 0 0 20px; max-width: 70ch; }
+      ol.pasos { margin: 0 0 8px; padding-left: 20px; color: var(--dim); max-width: 80ch; }
+      ol.pasos b { color: var(--text); }
+      .resumen { margin: 18px 0 8px; color: var(--dim); }
+      .lista { display: grid; gap: 14px; margin: 8px 0 40px; }
+      .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+      .card.bloqueada { opacity: 0.55; }
+      .cab { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+      .num { color: var(--accent); font-weight: 700; }
+      .card h2 { font-size: 18px; margin: 0; }
+      .nivel { font-size: 12px; color: var(--dim); border: 1px solid var(--line); border-radius: 99px; padding: 1px 8px; }
+      .estado { margin-left: auto; font-size: 13px; font-weight: 600; }
+      .estado.ok { color: var(--ok); }
+      .estado.parcial { color: var(--warn); }
+      .estado.nada { color: var(--dim); font-weight: 400; }
+      .card p { margin: 8px 0; }
+      .chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 10px; }
+      .chip { font-size: 12px; background: var(--panel-2); border-radius: 5px; padding: 2px 8px; color: var(--dim); }
+      .acciones { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+      details { margin-top: 10px; }
+      summary { cursor: pointer; color: var(--dim); font-size: 14px; }
+      .pista { margin: 8px 0 0; padding: 8px 10px; background: var(--panel-2); border-left: 3px solid var(--accent); border-radius: 4px; }
+      .nota { font-size: 12px; color: var(--dim); margin-top: 8px; }
+      .aviso { background: #2b2216; border: 1px solid #5a4422; border-radius: 8px; padding: 10px 12px; color: #e8cf9e; margin: 12px 0; }
+      footer { border-top: 1px solid var(--line); color: var(--dim); font-size: 13px; padding: 16px 0 28px; }
+      @media (max-width: 560px) { .estado { margin-left: 0; width: 100%; } h1 { font-size: 22px; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap top">
+        <img src="/oip-logo.svg" alt="Fábrica PLC" />
+        <nav>
+          <a class="btn" href="/app/">Modo libre</a>
+          <a class="btn" href="https://github.com/atienzacrespomarcos-oss/FACTORY_io/blob/main/tutor/LEEME.md">Tutor con Claude Code</a>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap">
+      <h1>Misiones</h1>
+      <p class="lead">Cada misión es una fábrica ya montada con un objetivo. Tú escribes el programa del PLC; un juez automático
+        lo prueba con la física real del simulador. Se supera cuando pasan todos los tests.</p>
+      <ol class="pasos">
+        <li>Pulsa <b>Jugar</b>: se abre la fábrica de la misión.</li>
+        <li>Abre la pestaña <b>PLC</b> (abajo) y escribe tu programa debajo de «Tu programa». Prueba con <b>Play</b>.</li>
+        <li>Cuando creas que está, ejecuta <b>Simulation → Run Project Tests</b> (o búscalo con la paleta de comandos).</li>
+        <li>Vuelve aquí con el logotipo de la barra de la app: verás tu progreso.</li>
+      </ol>
+      <div id="aviso" class="aviso" hidden></div>
+      <p class="resumen" id="resumen"></p>
+      <div class="lista" id="lista"><p class="resumen">Cargando misiones…</p></div>
+    </main>
+    <footer>
+      <div class="wrap">
+        Basado en <a href="https://github.com/Open-Industry-Project/Open-Industry-Project">Open Industry Project</a>
+        (licencia MIT, © Automation Standard LLC and Contributors). Proyecto independiente, sin afiliación.
+        <a href="/LICENSE">Licencia</a> · <a href="/THIRD_PARTY_NOTICES.md">Avisos de terceros</a>
+      </div>
+    </footer>
+    <script>
+      // El progreso lo guarda la app (src/editor/misiones/misiones.ts) en este mismo origen.
+      const PROGRESS_KEY = 'fabrica-plc/misiones/progreso'
+      const lista = document.getElementById('lista')
+      const resumen = document.getElementById('resumen')
+      const aviso = document.getElementById('aviso')
+
+      function leerProgreso() {
+        try {
+          const raw = localStorage.getItem(PROGRESS_KEY)
+          const p = raw ? JSON.parse(raw) : {}
+          return p && typeof p === 'object' ? p : {}
+        } catch {
+          return {}
+        }
+      }
+
+      function el(tag, attrs, ...hijos) {
+        const n = document.createElement(tag)
+        for (const [k, v] of Object.entries(attrs || {})) {
+          if (k === 'class') n.className = v
+          else if (k.startsWith('on')) n.addEventListener(k.slice(2), v)
+          else n.setAttribute(k, v)
+        }
+        for (const h of hijos) if (h !== null && h !== undefined) n.append(h)
+        return n
+      }
+
+      function estadoDe(m, p) {
+        if (p && p.superada) return el('span', { class: 'estado ok' }, '✓ Superada')
+        if (p && p.ultima) {
+          const t = p.ultima.oficiales ? `${p.mejor} de ${m.tests} tests` : 'Tests modificados: no cuenta'
+          return el('span', { class: 'estado parcial' }, t)
+        }
+        return el('span', { class: 'estado nada' }, 'Sin empezar')
+      }
+
+      function pistas(m) {
+        if (!m.pistas.length) return null
+        const d = el('details', {}, el('summary', {}, `Pistas (${m.pistas.length}), de menos a más ayuda`))
+        let mostradas = 0
+        const boton = el('button', { class: 'btn', type: 'button' }, 'Ver la siguiente pista')
+        boton.style.marginTop = '8px'
+        boton.addEventListener('click', () => {
+          if (mostradas < m.pistas.length) boton.before(el('p', { class: 'pista' }, m.pistas[mostradas++]))
+          if (mostradas >= m.pistas.length) boton.remove()
+        })
+        d.append(boton)
+        return d
+      }
+
+      function tarjeta(m, p, bloqueada) {
+        const jugar = `/app/?mision=${encodeURIComponent(m.id)}`
+        const acciones = el('div', { class: 'acciones' },
+          el('a', { class: 'btn primary', href: jugar }, p && p.ultima ? 'Continuar' : 'Jugar'),
+          el('a', {
+            class: 'btn', href: `${jugar}&nueva=1`,
+            onclick: (e) => {
+              if (!confirm('Se abrirá una copia nueva de la misión, con el programa inicial. Tu versión actual se queda en la lista de proyectos de la app. ¿Seguir?')) e.preventDefault()
+            },
+          }, 'Empezar de cero'),
+        )
+        return el('article', { class: `card${bloqueada ? ' bloqueada' : ''}` },
+          el('div', { class: 'cab' },
+            el('span', { class: 'num' }, `Misión ${m.orden}`),
+            el('h2', {}, m.titulo),
+            el('span', { class: 'nivel' }, m.nivel),
+            estadoDe(m, p)),
+          el('p', {}, m.objetivo),
+          el('div', { class: 'chips' }, ...m.aprenderas.map((a) => el('span', { class: 'chip' }, a))),
+          el('p', { class: 'nota' }, `${m.tests} tests de juez.`),
+          bloqueada ? el('p', { class: 'nota' }, 'Recomendado: supera antes la misión anterior.') : null,
+          acciones,
+          pistas(m),
+          m.origen ? el('p', { class: 'nota' }, m.origen) : null)
+      }
+
+      async function cargar() {
+        try {
+          const res = await fetch('/misiones/index.json', { cache: 'no-cache' })
+          if (!res.ok) throw new Error(`HTTP ${res.status}`)
+          const { misiones } = await res.json()
+          const progreso = leerProgreso()
+          lista.replaceChildren()
+          let anteriorSuperada = true
+          let superadas = 0
+          for (const m of misiones) {
+            const p = progreso[m.id]
+            if (p && p.superada) superadas++
+            lista.append(tarjeta(m, p, !anteriorSuperada))
+            anteriorSuperada = !!(p && p.superada)
+          }
+          resumen.textContent = `${superadas} de ${misiones.length} misiones superadas.`
+        } catch (e) {
+          lista.replaceChildren(el('p', { class: 'resumen' }, `No se pudo cargar la lista de misiones (${e.message}).`))
+        }
+        try {
+          localStorage.getItem(PROGRESS_KEY)
+        } catch {
+          aviso.hidden = false
+          aviso.textContent = 'Este navegador no permite guardar datos: el progreso no se recordará.'
+        }
+      }
+      cargar()
+      // al volver con el botón Atrás del navegador, la página puede venir de la caché: se recarga el progreso
+      addEventListener('pageshow', (e) => { if (e.persisted) cargar() })
+    </script>
+  </body>
+</html>

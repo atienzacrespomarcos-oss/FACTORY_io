@@ -1,0 +1,22 @@
+{
+  "version": 7,
+  "name": "Misión 2 · Lote de 5 cajas",
+  "scene": "scene.json",
+  "packages": [
+    "parts/oip.box-spawner",
+    "parts/oip.box",
+    "parts/oip.belt-conveyor",
+    "parts/oip.diffuse-sensor",
+    "parts/oip.push-button",
+    "parts/oip.despawner"
+  ],
+  "program": [
+    "plc/program.st"
+  ],
+  "tests": [
+    "tests/01-cuenta-y-para.test.json",
+    "tests/02-rearme-nuevo-lote.test.json",
+    "tests/03-sin-rearme-no-arranca.test.json",
+    "tests/04-rearme-no-arranca-solo.test.json"
+  ]
+}

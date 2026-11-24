@@ -65,7 +65,13 @@ export function TestResultsOverlay({ project, onClose }: TestResultsOverlayProps
     runProjectTests(project, (run) => {
       if (live) setRuns((prev) => [...prev, run])
     })
-      .then(() => live && setDone(true))
+      .then((all) => {
+        if (live) setDone(true)
+        // Fábrica PLC: si el proyecto es una misión, guarda el resultado para la página de misiones
+        import('../misiones/misiones')
+          .then((m) => m.registrarResultadoMision(project, all))
+          .catch((e: unknown) => console.warn('[fabrica-plc] progreso de misión', e))
+      })
       .catch((e: unknown) => {
         if (!live) return
         setError(e instanceof Error ? e.message : String(e))

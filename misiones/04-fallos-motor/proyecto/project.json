@@ -1,0 +1,17 @@
+{
+  "version": 7,
+  "name": "Misión 4 · Motor con vigilancia de fallos",
+  "packages": [
+    "parts/demo.motor"
+  ],
+  "scene": "scene.json",
+  "program": [
+    "plc/program.st"
+  ],
+  "tests": [
+    "tests/01-marcha-paro.test.json",
+    "tests/02-motor-no-responde.test.json",
+    "tests/03-realimentacion-perdida.test.json",
+    "tests/04-perdida-comunicacion.test.json"
+  ]
+}

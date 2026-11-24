@@ -1,0 +1,12 @@
+{
+  "orden": 1,
+  "titulo": "Marcha y paro",
+  "nivel": "Básico",
+  "objetivo": "Pon en marcha la cinta y el alimentador con el pulsador Marcha, mantenlos en marcha al soltarlo y detenlos con Paro. Si se pulsan los dos a la vez, gana Paro.",
+  "aprenderas": ["Pulsadores momentáneos", "Enclavamiento (autorretención)", "Prioridad del paro"],
+  "pistas": [
+    "Marcha solo vale TRUE mientras lo pulsas. ¿Qué variable puede «recordar» que la línea debe seguir en marcha?",
+    "Una salida puede aparecer en su propia condición: EnMarcha := (Marcha OR EnMarcha) ...",
+    "Para que Paro gane siempre, ponlo como condición que corta todo lo demás: ... AND NOT Paro."
+  ]
+}

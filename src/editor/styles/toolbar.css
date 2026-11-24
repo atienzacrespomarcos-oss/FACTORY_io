@@ -106,6 +106,12 @@ button:disabled {
   justify-self: end;
 }
 
+/* Fábrica PLC: el logotipo lleva a la página de misiones */
+.toolbar-logo-link {
+  display: inline-flex;
+  flex: none;
+}
+
 .toolbar-logo {
   height: 24px;
   width: auto;

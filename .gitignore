@@ -97,3 +97,7 @@ Examples_Dont_Commit/
 *.log
 # listed library part versions, downloaded by hash to run against this build (scripts/library-corpus.mjs)
 /.cache/library-corpus
+
+# Fábrica PLC: salida de scripts/build-misiones.mjs
+public/misiones/*.oip
+public/misiones/index.json

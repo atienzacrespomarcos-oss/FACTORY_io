@@ -1,0 +1,12 @@
+{
+  "version": 7,
+  "name": "Misión 3 · Detección de atascos",
+  "scene": "scene.json",
+  "program": [
+    "plc/program.st"
+  ],
+  "tests": [
+    "tests/01-trafico-normal.test.json",
+    "tests/02-atasco.test.json"
+  ]
+}

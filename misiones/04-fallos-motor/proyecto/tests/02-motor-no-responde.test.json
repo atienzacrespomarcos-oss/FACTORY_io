@@ -1,0 +1,24 @@
+{
+  "name": "Un motor que deja de responder activa FalloMotor y queda parado hasta el rearme",
+  "duration": 4.5,
+  "inputs": [
+    { "at": 0.5, "tag": "Marcha", "value": true },
+    { "at": 0.6, "tag": "Marcha", "value": false },
+    { "at": 3.0, "tag": "Rearme", "value": true },
+    { "at": 3.1, "tag": "Rearme", "value": false },
+    { "at": 3.5, "tag": "Marcha", "value": true },
+    { "at": 3.6, "tag": "Marcha", "value": false }
+  ],
+  "faults": [
+    { "at": 1.0, "until": 2.5, "part": "m1", "kind": "actuatorDead" }
+  ],
+  "checks": [
+    { "at": 0.9, "tag": "Realimentacion", "equals": true },
+    { "at": 0.9, "tag": "FalloMotor", "equals": false },
+    { "eventually": true, "until": 2.0, "tag": "FalloMotor", "equals": true },
+    { "at": 2.0, "tag": "OrdenMarcha", "equals": false },
+    { "at": 2.9, "tag": "Realimentacion", "equals": false },
+    { "at": 4.2, "tag": "FalloMotor", "equals": false },
+    { "at": 4.2, "tag": "Realimentacion", "equals": true }
+  ]
+}

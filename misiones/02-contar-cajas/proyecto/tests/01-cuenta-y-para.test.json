@@ -1,0 +1,73 @@
+{
+  "name": "Cuenta cada caja una vez y para la línea al llegar a 5",
+  "duration": 30,
+  "inputs": [
+    {
+      "at": 0.5,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 1.0,
+      "tag": "Marcha",
+      "value": false
+    }
+  ],
+  "checks": [
+    {
+      "at": 2.0,
+      "tag": "CintaMarcha",
+      "equals": true
+    },
+    {
+      "always": true,
+      "tag": "Cajas",
+      "max": 5
+    },
+    {
+      "eventually": true,
+      "tag": "Cajas",
+      "equals": 5
+    },
+    {
+      "eventually": true,
+      "tag": "LoteCompleto",
+      "equals": true
+    },
+    {
+      "always": true,
+      "from": 22,
+      "tag": "CintaMarcha",
+      "equals": false
+    },
+    {
+      "always": true,
+      "from": 22,
+      "tag": "Alimentador",
+      "equals": false
+    },
+    {
+      "eventually": true,
+      "from": 22,
+      "tag": "Cajas",
+      "equals": {
+        "probe": {
+          "passed": {
+            "zone": {
+              "min": [
+                3.45,
+                0.85,
+                -0.8
+              ],
+              "max": [
+                3.69,
+                1.4,
+                0.8
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

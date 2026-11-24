@@ -136,6 +136,7 @@ const M = defineMessages('toolbar', {
   openDesktopRoom: 'Opens this shared project in the desktop app',
   openDesktopCopy: 'Opens a copy of this project in the desktop app; this browser keeps its own',
   github: 'Fábrica PLC en GitHub',
+  missions: 'Missions',
 })
 
 /** a command's label, through the seam (commands.ts) */
@@ -353,7 +354,11 @@ export function Toolbar({ store, state, controller }: ToolbarProps) {
             icon top-left; macOS keeps its screen menu bar, so it shows nothing at all. The img is
             decorative. oip-icon.svg is the mark as true vector; the old oip-mark.svg was a TRACED 16px
             bitmap, so at the 24px this renders at it was an upscale of a blurry downscale. */}
-        {!DESKTOP_SHELL && <img className="toolbar-logo" src="/oip-icon.svg" alt="" aria-hidden="true" />}
+        {!DESKTOP_SHELL && (
+          <a className="toolbar-logo-link" href="/misiones/" title={t(M.missions)}>
+            <img className="toolbar-logo" src="/oip-icon.svg" alt="" aria-hidden="true" />
+          </a>
+        )}
         {/* The caret is the project menu's own: a bare mark read as branding, and people did not find the
             menu behind it. Menu names in the row were measured instead: the six take 300px
             and only fit at 1520px and up, a width most laptops never reach at their usual display scaling. */}

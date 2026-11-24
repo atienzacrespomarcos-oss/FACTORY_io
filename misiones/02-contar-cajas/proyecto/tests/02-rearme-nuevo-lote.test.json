@@ -1,0 +1,20 @@
+{
+  "name": "Rearme pone el contador a cero y Marcha empieza un lote nuevo",
+  "duration": 45,
+  "inputs": [
+    { "at": 0.5, "tag": "Marcha", "value": true },
+    { "at": 1.0, "tag": "Marcha", "value": false },
+    { "at": 22.0, "tag": "Rearme", "value": true },
+    { "at": 22.5, "tag": "Rearme", "value": false },
+    { "at": 23.0, "tag": "Marcha", "value": true },
+    { "at": 23.5, "tag": "Marcha", "value": false }
+  ],
+  "checks": [
+    { "at": 21.5, "tag": "LoteCompleto", "equals": true },
+    { "at": 22.8, "tag": "Cajas", "max": 1 },
+    { "at": 22.8, "tag": "LoteCompleto", "equals": false },
+    { "at": 24.0, "tag": "CintaMarcha", "equals": true },
+    { "always": true, "tag": "Cajas", "max": 5 },
+    { "eventually": true, "from": 30, "tag": "LoteCompleto", "equals": true }
+  ]
+}

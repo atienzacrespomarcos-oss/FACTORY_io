@@ -4,7 +4,7 @@ Simulador web de fábrica con PLC virtual. Montas una línea (cintas, sensores, 
 la programas en **Structured Text** o **Ladder** (subconjunto de IEC 61131-3) y la pones en marcha,
 todo en el navegador y sin hardware.
 
-**Jugar:** <https://atienzacrespomarcos-oss.github.io/FACTORY_io/app/>
+**Jugar:** <https://atienzacrespomarcos-oss.github.io/FACTORY_io/> (misiones) · [modo libre](https://atienzacrespomarcos-oss.github.io/FACTORY_io/app/)
 (Chrome o Edge recomendados; en Chrome la interfaz se traduce sola al español con el traductor del navegador).
 
 ## Origen y licencia
@@ -24,7 +24,7 @@ El primer commit de este repositorio es ese código sin modificar; los cambios p
 |---|---|---|
 | F0 | Fork, marca propia, publicación automática en GitHub Pages | hecho |
 | F1 | Tutor con Claude Code (pista / explicar / hacer), sin API de pago: ver [tutor/LEEME.md](tutor/LEEME.md) | hecho |
-| F2 | Capa de juego: misiones con juez automático, puntuación y progresión | pendiente |
+| F2 | Misiones con juez automático y progreso: ver [misiones/](misiones/) y la página `/misiones/` | hecho (4 misiones) |
 | F3 | Temática de la fábrica | pendiente |
 | F4 | Pulido | pendiente |
 
@@ -50,3 +50,16 @@ Con un repositorio `<usuario>.github.io` el prefijo es vacío y el paso no cambi
 
 GitHub Pages no permite las cabeceras COOP/COEP, así que la física y el PLC funcionan en un solo hilo
 (la app lo detecta y cae a ese modo sola).
+
+## Misiones
+
+Cada misión es una carpeta `misiones/<id>/`:
+
+- `proyecto/`: el proyecto que se abre en la app (escena, `plc/program.st` inicial y `tests/`, que son el juez);
+- `solucion.st`: una solución de referencia (no se publica en el `.oip`);
+- `mision.json`: título, nivel, objetivo, qué se aprende y pistas.
+
+`npm run check-misiones` comprueba en cada una que el programa inicial compila y no supera el juez, y que la
+solución lo supera. `npm run build` empaqueta las misiones en `public/misiones/` (`scripts/build-misiones.mjs`).
+En la app, `/app/?mision=<id>` abre la misión, y al ejecutar **Run Project Tests** el resultado se guarda en el
+navegador (`src/editor/misiones/misiones.ts`). Solo cuenta si los tests son los oficiales de la misión.

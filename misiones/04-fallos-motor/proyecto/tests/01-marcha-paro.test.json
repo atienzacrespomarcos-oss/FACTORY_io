@@ -1,0 +1,15 @@
+{
+  "name": "Marcha y paro con enclavamiento arrancan y paran el motor",
+  "duration": 2,
+  "inputs": [
+    { "at": 0.5, "tag": "Marcha", "value": true },
+    { "at": 0.6, "tag": "Marcha", "value": false },
+    { "at": 1.5, "tag": "Paro", "value": true }
+  ],
+  "checks": [
+    { "at": 0.2, "tag": "Realimentacion", "equals": false },
+    { "eventually": true, "until": 1.0, "tag": "Realimentacion", "equals": true },
+    { "at": 1.0, "tag": "Realimentacion", "equals": true },
+    { "at": 1.9, "tag": "Realimentacion", "equals": false }
+  ]
+}

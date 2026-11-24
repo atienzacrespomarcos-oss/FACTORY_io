@@ -31,8 +31,13 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Instalar dependencias
         run: npm ci --no-audit --no-fund
+      - name: Validar misiones (el inicio no supera el juez, la solución sí)
+        run: npm run check-misiones
       - name: Compilar
         run: npm run build
+        env:
+          # subdirectorio de Pages para Vite (vite.config.ts `base`); vacío en un repositorio <usuario>.github.io
+          FABRICA_BASE: ${{ steps.pages.outputs.base_path }}/
       - name: Ajustar rutas al subdirectorio de Pages
         # Un repositorio de proyecto se sirve en /<repo>/; el de usuario (<usuario>.github.io), en la raíz (base vacía).
         run: node scripts/rebase-dist.mjs dist "${{ steps.pages.outputs.base_path }}"

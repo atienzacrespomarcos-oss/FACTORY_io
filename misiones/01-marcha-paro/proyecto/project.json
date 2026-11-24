@@ -1,0 +1,21 @@
+{
+  "version": 7,
+  "name": "Misión 1 · Marcha y paro",
+  "scene": "scene.json",
+  "packages": [
+    "parts/oip.box-spawner",
+    "parts/oip.box",
+    "parts/oip.belt-conveyor",
+    "parts/oip.diffuse-sensor",
+    "parts/oip.push-button",
+    "parts/oip.despawner"
+  ],
+  "program": [
+    "plc/program.st"
+  ],
+  "tests": [
+    "tests/01-arranca-y-se-mantiene.test.json",
+    "tests/02-paro-detiene.test.json",
+    "tests/03-paro-tiene-prioridad.test.json"
+  ]
+}

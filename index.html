@@ -10,8 +10,8 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#17181b" />
     <script>
-      // La portada solo lleva al simulador; ?portada la deja a la vista.
-      if (!new URLSearchParams(location.search).has('portada')) location.replace('/app/' + location.hash)
+      // La portada lleva a las misiones; ?portada la deja a la vista.
+      if (!new URLSearchParams(location.search).has('portada')) location.replace('/misiones/' + location.hash)
     </script>
     <style>
       :root { color-scheme: dark; }
@@ -29,7 +29,8 @@
     <main>
       <img src="/oip-logo.svg" alt="Fábrica PLC" />
       <p>Monta tu fábrica, programa su PLC virtual y ponla en marcha.</p>
-      <a class="boton" href="/app/">Abrir la fábrica</a>
+      <a class="boton" href="/misiones/">Misiones</a>
+      <p><a href="/app/">Modo libre</a></p>
       <p class="creditos">
         Basado en <a href="https://github.com/Open-Industry-Project/Open-Industry-Project">Open Industry Project</a>
         (licencia MIT, © Automation Standard LLC and Contributors). Proyecto independiente, sin afiliación.

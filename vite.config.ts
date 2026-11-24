@@ -200,6 +200,10 @@ function buildTime(): number {
 }
 
 export default defineConfig({
+  // Fábrica PLC: subdirectorio donde se publica (GitHub Pages de un repositorio de proyecto, p. ej. /FACTORY_io/).
+  // Vite lo aplica a lo que él genera (chunks, precargas, workers, CSS); las rutas escritas a mano en el código las
+  // reescribe scripts/rebase-dist.mjs. Sin la variable, la raíz, como en el proyecto original.
+  base: process.env.FABRICA_BASE ?? '/',
   define: { __BUILD_ID__: JSON.stringify(buildId()), __BUILD_TIME__: JSON.stringify(buildTime()) },
   plugins: [
     react(),

@@ -67,7 +67,9 @@ export function eagerJsUrls(distDir) {
 export function eagerJsChunks(distDir) {
   const out = []
   for (const url of eagerJsUrls(distDir)) {
-    const file = join(distDir, url.replace(/^\//, ''))
+    // Fábrica PLC: con FABRICA_BASE (vite.config.ts `base`) las URLs llevan el subdirectorio delante; en dist/ no
+    const base = process.env.FABRICA_BASE ?? '/'
+    const file = join(distDir, url.startsWith(base) ? url.slice(base.length) : url.replace(/^\//, ''))
     if (!existsSync(file)) continue
     const bytes = readFileSync(file)
     const br = brotliCompressSync(bytes, { params: { [zlibConstants.BROTLI_PARAM_QUALITY]: 11 } })

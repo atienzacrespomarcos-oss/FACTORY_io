@@ -1,0 +1,15 @@
+{
+  "name": "Con Marcha y Paro pulsados a la vez, gana Paro",
+  "duration": 6,
+  "inputs": [
+    { "at": 1.0, "tag": "Paro", "value": true },
+    { "at": 1.0, "tag": "Marcha", "value": true },
+    { "at": 2.0, "tag": "Marcha", "value": false },
+    { "at": 2.0, "tag": "Paro", "value": false }
+  ],
+  "checks": [
+    { "eventually": true, "tag": "Paro", "equals": true },
+    { "always": true, "tag": "CintaMarcha", "equals": false },
+    { "always": true, "tag": "Alimentador", "equals": false }
+  ]
+}

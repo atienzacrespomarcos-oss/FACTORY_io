@@ -1,0 +1,30 @@
+{
+  "name": "Una caja atascada para la línea, la alarma vuelve a saltar si se rearranca con la caja aún atascada, y la línea sigue cuando se libera",
+  "duration": 15.5,
+  "inputs": [
+    { "at": 0.5, "tag": "Marcha", "value": true },
+    { "at": 0.6, "tag": "Marcha", "value": false },
+    { "at": 8.0, "tag": "Rearme", "value": true },
+    { "at": 8.1, "tag": "Rearme", "value": false },
+    { "at": 8.2, "tag": "Marcha", "value": true },
+    { "at": 8.3, "tag": "Marcha", "value": false },
+    { "at": 12.5, "tag": "Rearme", "value": true },
+    { "at": 12.6, "tag": "Rearme", "value": false },
+    { "at": 12.7, "tag": "Marcha", "value": true },
+    { "at": 12.8, "tag": "Marcha", "value": false }
+  ],
+  "faults": [
+    { "at": 3, "until": 12, "kind": "jam", "zone": { "min": [2.4, 0.8, -0.7], "max": [2.8, 1.4, 0.7] } }
+  ],
+  "checks": [
+    { "at": 3, "tag": "AlarmaAtasco", "equals": false },
+    { "eventually": true, "until": 7, "tag": "AlarmaAtasco", "equals": true },
+    { "at": 7.5, "tag": "CintaMarcha", "equals": false },
+    { "at": 7.5, "tag": "Alimentador", "equals": false },
+    { "at": 9, "tag": "CintaMarcha", "equals": true },
+    { "at": 10.8, "tag": "AlarmaAtasco", "equals": true },
+    { "at": 10.8, "tag": "CintaMarcha", "equals": false },
+    { "at": 15.4, "tag": "AlarmaAtasco", "equals": false },
+    { "at": 15.4, "tag": "CintaMarcha", "equals": true }
+  ]
+}

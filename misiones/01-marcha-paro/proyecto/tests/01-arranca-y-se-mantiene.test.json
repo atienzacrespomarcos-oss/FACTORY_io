@@ -1,0 +1,14 @@
+{
+  "name": "Marcha arranca la línea y sigue en marcha al soltar el pulsador",
+  "duration": 15,
+  "inputs": [
+    { "at": 0.5, "tag": "Marcha", "value": true },
+    { "at": 1.0, "tag": "Marcha", "value": false }
+  ],
+  "checks": [
+    { "always": true, "until": 0.4, "tag": "CintaMarcha", "equals": false },
+    { "always": true, "from": 1.5, "tag": "CintaMarcha", "equals": true },
+    { "always": true, "from": 1.5, "tag": "Alimentador", "equals": true },
+    { "eventually": true, "within": 15, "tag": "CajasSalida", "min": 1 }
+  ]
+}

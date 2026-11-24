@@ -1,0 +1,15 @@
+{
+  "name": "Paro detiene la cinta y el alimentador, y no vuelven a arrancar solos",
+  "duration": 10,
+  "inputs": [
+    { "at": 0.5, "tag": "Marcha", "value": true },
+    { "at": 1.0, "tag": "Marcha", "value": false },
+    { "at": 4.0, "tag": "Paro", "value": true },
+    { "at": 4.5, "tag": "Paro", "value": false }
+  ],
+  "checks": [
+    { "at": 3.5, "tag": "CintaMarcha", "equals": true },
+    { "always": true, "from": 4.2, "tag": "CintaMarcha", "equals": false },
+    { "always": true, "from": 4.2, "tag": "Alimentador", "equals": false }
+  ]
+}

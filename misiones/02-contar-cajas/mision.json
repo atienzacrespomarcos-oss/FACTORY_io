@@ -1,0 +1,12 @@
+{
+  "orden": 2,
+  "titulo": "Lote de 5 cajas",
+  "nivel": "Básico",
+  "objetivo": "Cuenta las cajas que pasan por la fotocélula de salida, para la línea al completar un lote de 5 y deja empezar otro lote solo después de pulsar Rearme.",
+  "aprenderas": ["Detección de flancos (R_TRIG)", "Contadores", "Orden de las instrucciones en el ciclo de scan"],
+  "pistas": [
+    "La fotocélula está a TRUE durante muchos ciclos mientras pasa una caja. ¿Cómo cuentas la caja una sola vez?",
+    "El bloque R_TRIG da un pulso de un solo ciclo cuando su entrada CLK pasa de FALSE a TRUE.",
+    "Añade «AND NOT LoteCompleto» a la condición de marcha, y pon a cero Cajas y LoteCompleto con Rearme."
+  ]
+}

@@ -17,7 +17,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/check-orphan-models.mjs && tsc -b && vite build && node scripts/optimize-assets.mjs && node scripts/eager-check.mjs",
+    "build": "node scripts/build-misiones.mjs && node scripts/check-orphan-models.mjs && tsc -b && vite build && node scripts/optimize-assets.mjs && node scripts/eager-check.mjs",
     "build-embedded-plc": "node scripts/build-embedded-plc.mjs && node scripts/verify-embedded-plc.mjs",
     "build-part-sdk": "node scripts/build-part-sdk.mjs",
     "build-library": "node scripts/build-library.mjs",
@@ -50,6 +50,8 @@
     "snap-part": "node scripts/snap-part.mjs",
     "shot-part": "node scripts/shot-part.mjs",
     "capabilities": "node scripts/capabilities.mjs",
+    "check-misiones": "node scripts/check-misiones.mjs",
+    "build-misiones": "node scripts/build-misiones.mjs",
     "check-wiring": "node scripts/check-wiring.mjs",
     "check-layout": "node scripts/check-layout.mjs",
     "scaffold-project": "node scripts/scaffold-project.mjs",

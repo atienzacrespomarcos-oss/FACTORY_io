@@ -717,6 +717,10 @@ function startSolo(): void {
     // handshake + React mount that emits them today (~2.6 s of idle link under WebGPU).
     prefetchSceneAssets(store.getState().scene)
     void xremu.then(mount).catch((e: unknown) => console.error('[oip] the editor failed to mount', e))
+    // Fábrica PLC: /app/?mision=<id> abre esa misión (misiones/misiones.ts); el módulo solo se carga si se pide
+    if (new URLSearchParams(location.search).has('mision')) {
+      void import('./misiones/misiones').then((m) => m.abrirMisionPedida(store)).catch((e: unknown) => console.error('[fabrica-plc] misión', e))
+    }
   }
   // the working copy is the open document's library row, read before the boot (projectFile.openWorkingCopy)
   void openWorkingCopy()

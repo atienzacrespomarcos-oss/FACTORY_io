@@ -1,0 +1,13 @@
+{
+  "orden": 3,
+  "titulo": "Detección de atascos",
+  "nivel": "Intermedio",
+  "objetivo": "Detecta una caja atascada delante de la fotocélula, para la línea, mantén la alarma hasta el rearme y no dejes que el tráfico normal la dispare.",
+  "aprenderas": ["Temporizador a la conexión (TON)", "Alarmas con memoria y rearme", "Condiciones que solo valen con la máquina en marcha"],
+  "pistas": [
+    "¿Cuánto tiempo tapa la fotocélula una caja normal? ¿Y una atascada? La diferencia es el tiempo.",
+    "Un TON con PT := T#2s pone Q a TRUE cuando su entrada IN lleva 2 s seguidos a TRUE.",
+    "Si la cinta está parada, una caja delante de la fotocélula no es un atasco: incluye CintaMarcha en la entrada del TON."
+  ],
+  "origen": "Escena y tests adaptados del ejemplo jam-detect de Open Industry Project (MIT)."
+}
