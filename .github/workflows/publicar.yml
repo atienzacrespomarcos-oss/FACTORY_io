@@ -19,6 +19,9 @@ concurrency:
 
 jobs:
   compilar:
+    # La app usa rutas absolutas desde la raíz (/models, /app/...), así que solo funciona publicada en la raíz
+    # del dominio: el repositorio <usuario>.github.io. Con otro nombre Pages la serviría en /<repo>/ y no cargaría.
+    if: github.event.repository.name == format('{0}.github.io', github.repository_owner)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1 (mismo pin que el proyecto original)
