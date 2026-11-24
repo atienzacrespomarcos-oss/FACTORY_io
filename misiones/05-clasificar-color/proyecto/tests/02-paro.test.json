@@ -1,0 +1,16 @@
+{
+  "name": "Paro detiene la línea y deja el empujador recogido",
+  "duration": 16,
+  "inputs": [
+    { "at": 0.5, "tag": "Marcha", "value": true },
+    { "at": 1.0, "tag": "Marcha", "value": false },
+    { "at": 9.0, "tag": "Paro", "value": true },
+    { "at": 9.5, "tag": "Paro", "value": false }
+  ],
+  "checks": [
+    { "at": 8.5, "tag": "CintaMarcha", "equals": true },
+    { "always": true, "from": 9.2, "tag": "CintaMarcha", "equals": false },
+    { "always": true, "from": 9.2, "tag": "Alimentador", "equals": false },
+    { "always": true, "from": 9.2, "tag": "Desviador", "equals": false }
+  ]
+}

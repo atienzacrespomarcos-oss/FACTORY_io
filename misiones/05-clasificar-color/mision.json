@@ -1,0 +1,12 @@
+{
+  "orden": 5,
+  "titulo": "Clasificar devoluciones",
+  "nivel": "Intermedio",
+  "objetivo": "Centro logístico, muelle de entrada: aparta las devoluciones (cajas rojas) hacia la cinta lateral con el empujador y deja seguir los pedidos (azules), sin que ninguna caja caiga al suelo.",
+  "aprenderas": ["Leer un sensor analógico de color (INT)", "Memorizar un dato entre dos sensores", "Retardo con TON y pulso con TP", "Sincronizar un actuador con el transporte"],
+  "pistas": [
+    "El sensor de color solo da un valor mientras la caja está delante. Guarda en una variable si la última caja era roja.",
+    "Si sacas el empujador en cuanto la fotocélula ve la caja, la pala sale antes de que llegue y la caja choca contra ella. Calcula cuánto tarda en recorrer 0,67 m a 1 m/s.",
+    "Con R_TRIG detecta la llegada, activa una memoria si es roja, retrásala con un TON de unos 0,4–0,5 s y da el empuje con un TP de 1 s."
+  ]
+}

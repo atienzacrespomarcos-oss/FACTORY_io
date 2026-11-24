@@ -1,0 +1,22 @@
+{
+  "version": 7,
+  "name": "Misión 5 · Clasificar devoluciones",
+  "scene": "scene.json",
+  "packages": [
+    "parts/oip.box-spawner",
+    "parts/oip.box",
+    "parts/oip.belt-conveyor",
+    "parts/oip.color-sensor",
+    "parts/oip.diffuse-sensor",
+    "parts/oip.diverter",
+    "parts/oip.push-button",
+    "parts/oip.despawner"
+  ],
+  "program": [
+    "plc/program.st"
+  ],
+  "tests": [
+    "tests/01-clasifica.test.json",
+    "tests/02-paro.test.json"
+  ]
+}
