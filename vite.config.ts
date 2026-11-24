@@ -222,9 +222,9 @@ export default defineConfig({
       // copied verbatim into dist so the manifest/index can reference them
       includeAssets: ['favicon-16.png', 'favicon-32.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Open Industry Project',
-        short_name: 'OIP',
-        description: 'Browser-based industrial conveyor and material-handling simulator.',
+        name: 'Fábrica PLC',
+        short_name: 'Fábrica PLC',
+        description: 'Simulador web de fábrica con PLC virtual (IEC 61131-3), basado en Open Industry Project.',
         // the toolbar's colour, not the app background: this tints the status bar, and the
         // toolbar is what sits under it. background_color below stays --bg (it is the splash).
         theme_color: '#202225',

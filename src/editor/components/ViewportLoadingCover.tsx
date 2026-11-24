@@ -131,7 +131,7 @@ export function ViewportLoadingCover() {
       aria-hidden={!covered}
     >
       {/* i18n-ok: the product's name */}
-      <img className="viewport-cover-logo" src="/oip-logo.svg" alt="Open Industry Project" />
+      <img className="viewport-cover-logo" src="/oip-logo.svg" alt="Fábrica PLC" />
       <div className="viewport-cover-status">
         {ready && swapping ? (
           t(M.scene)

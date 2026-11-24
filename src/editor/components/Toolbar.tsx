@@ -135,7 +135,7 @@ const M = defineMessages('toolbar', {
   tutorialTitle: 'Opens in a project of its own. The one you are in is kept',
   openDesktopRoom: 'Opens this shared project in the desktop app',
   openDesktopCopy: 'Opens a copy of this project in the desktop app; this browser keeps its own',
-  github: 'Open Industry Project on GitHub',
+  github: 'Fábrica PLC en GitHub',
 })
 
 /** a command's label, through the seam (commands.ts) */
@@ -159,7 +159,7 @@ function withCommandKey(label: string, id: string): string {
   return chord ? t(M.withChord, { label, chord }) : label
 }
 
-const GITHUB_URL = 'https://github.com/Open-Industry-Project/Open-Industry-Project'
+const GITHUB_URL = 'https://github.com/atienzacrespomarcos-oss/atienzacrespomarcos-oss.github.io'
 
 interface ToolbarProps {
   store: EditorStore

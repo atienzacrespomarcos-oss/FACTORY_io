@@ -163,7 +163,7 @@ const M = defineMessages('app', {
 
 // The app half of the window title. Matches the <title> in app/index.html, which is what the tab reads
 // until the first render replaces it with the document name (see the title effect in App).
-const APP_TITLE = 'Open Industry Project'
+const APP_TITLE = 'Fábrica PLC'
 
 const noSubscribe = (): (() => void) => () => {}
 /** a file the user picked that failed to import, said as the importers say their own failures */
