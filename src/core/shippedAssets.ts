@@ -33,8 +33,20 @@ export function pinShippedAsset(asset: PartAsset): PartAsset {
  * report the part as edited. Any other url is fetched as it is.
  */
 export function shippedFetchUrl(url: string): string {
-  const e = SHIPPED_PART_ASSETS[url]
-  return e ? `${PART_ASSETS_PATH}${e.sha256}${e.ext}` : url
+  const e = SHIPPED_PART_ASSETS[url] ?? SHIPPED_PART_ASSETS[underBase(url)]
+  return e ? `${PART_ASSETS_PATH}${e.sha256}${e.ext}` : underBase(url)
+}
+
+// Fábrica PLC: published under a subdirectory (GitHub Pages, /FACTORY_io/), scripts/rebase-dist.mjs rewrites the
+// root-relative URLs in the code, PART_ASSETS_PATH included, but not the ones stored in a project's part packages
+// (`/part-assets/<sha>.webp`). Those get the same prefix here, where every stored asset URL is fetched from.
+// The prefix is Vite's own BASE_URL (vite.config.ts `base`), set at build time: a value derived from a string the
+// minifier can see is folded before rebase-dist runs, and would always read as the root.
+const BASE_PATH = (import.meta as { env?: { BASE_URL?: string } }).env?.BASE_URL ?? '/'
+
+/** `url` with the published base in front when it is root-relative and lacks it; unchanged at the root. */
+function underBase(url: string): string {
+  return BASE_PATH !== '/' && url.startsWith('/') && !url.startsWith('//') && !url.startsWith(BASE_PATH) ? BASE_PATH + url.slice(1) : url
 }
 
 /** The URL this app serves the bytes of `sha256` at, when they are a part asset it ships. */

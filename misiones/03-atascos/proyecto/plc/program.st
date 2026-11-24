@@ -9,6 +9,10 @@
    - AlarmaAtasco se queda activa hasta pulsar Rearme. Después, Marcha vuelve a arrancar.
    - Si se rearma y arranca con la caja todavía atascada, la alarma debe volver a saltar.
    - El tráfico normal no debe disparar nunca la alarma. *)
+
+(* Cómo probarlo: pulsa Play (▶). Para accionar un pulsador, selecciónalo en la lista Scene
+   (por ejemplo «Pulsador Marcha») y pulsa la tecla C. En la pestaña Watch ves las variables.
+   Cuando creas que está, pulsa «Run tests» (junto a Play): es el juez de la misión. *)
 VAR_INPUT
   Marcha : BOOL;        (* pulsador de marcha: TRUE solo mientras se pulsa *)
   Paro : BOOL;          (* pulsador de paro: TRUE solo mientras se pulsa *)

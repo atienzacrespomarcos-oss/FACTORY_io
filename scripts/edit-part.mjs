@@ -34,7 +34,7 @@ const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const argv = process.argv.slice(2)
 const usage = (why) => {
   if (why) console.error(`✗ ${why}`)
-  console.error('usage: npm run edit-part -- <project-folder> <partId> [--params k=v,...] [--at x,y,z] [--rot <deg>] [--name <text>] [--docks]')
+  console.error('usage: npm run edit-part -- <project-folder> <partId> [--params k=v,...] [--at x,y,z] [--rot <deg>] [--name <text>] [--visible true|false] [--docks]')
   process.exit(2)
 }
 const positional = []
@@ -42,7 +42,12 @@ const o = {}
 for (let i = 0; i < argv.length; i++) {
   const a = argv[i]
   if (a === '--docks') o.docks = true
-  else if (a === '--params' || a === '--at' || a === '--rot' || a === '--name') {
+  else if (a === '--visible') {
+    // Fábrica PLC: show or hide a part's visuals; a hidden part still collides and simulates (core/types/base.ts)
+    const v = argv[++i]
+    if (v !== 'true' && v !== 'false') usage(`--visible wants true or false, not "${v}"`)
+    o.visible = v === 'true'
+  } else if (a === '--params' || a === '--at' || a === '--rot' || a === '--name') {
     const v = argv[++i]
     if (v === undefined) usage(`${a} wants a value`)
     if (a === '--params') o.params = v
@@ -62,7 +67,7 @@ for (let i = 0; i < argv.length; i++) {
 const [folder, partId, ...extra] = positional
 if (!folder || !partId) usage()
 if (extra.length) usage(`one part at a time (got ${[partId, ...extra].join(', ')})`)
-const edits = o.params !== undefined || o.at !== undefined || o.rot !== undefined || o.name !== undefined
+const edits = o.params !== undefined || o.at !== undefined || o.rot !== undefined || o.name !== undefined || o.visible !== undefined
 if (!edits && !o.docks) usage('nothing to change: give --params, --at, --rot or --name (or --docks to list a building\'s dock doors)')
 
 const r6 = (n) => Math.round(n * 1e6) / 1e6
@@ -160,6 +165,13 @@ try {
       if (was.rotationY !== now.rotationY) what.push(`yaw ${deg(was.rotationY)} -> ${deg(now.rotationY)} deg`)
       lines.push(`  ${id === partId ? '' : `${id} (carried: in ${partId}'s subtree) `}${what.join(', ') || 'pose unchanged'}`)
     }
+  }
+  if (o.visible !== undefined) {
+    const target = scene.parts.find((p) => p.id === partId)
+    const was = target.visible !== false
+    if (o.visible) delete target.visible
+    else target.visible = false
+    lines.push(`  visible: ${was} -> ${o.visible}`)
   }
   if (o.name !== undefined) {
     const target = scene.parts.find((p) => p.id === partId)

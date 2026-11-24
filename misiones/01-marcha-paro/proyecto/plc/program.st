@@ -5,6 +5,10 @@
 
    Las señales ya están declaradas con los nombres que usan las piezas de la escena.
    Escribe tu lógica debajo de la línea "Tu programa". *)
+
+(* Cómo probarlo: pulsa Play (▶). Para accionar un pulsador, selecciónalo en la lista Scene
+   (por ejemplo «Pulsador Marcha») y pulsa la tecla C. En la pestaña Watch ves las variables.
+   Cuando creas que está, pulsa «Run tests» (junto a Play): es el juez de la misión. *)
 VAR_INPUT
   FotocelulaSalida : BOOL;  (* fotocélula al final de la cinta: TRUE con caja delante *)
   Marcha : BOOL;            (* pulsador verde: TRUE solo mientras se pulsa *)

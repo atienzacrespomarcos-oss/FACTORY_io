@@ -17,6 +17,10 @@
    Datos útiles: los rodillos van a 1 m/s y la cinta de salida a 2 m/s, así que al salir las cajas
    se separan y la fotocélula de salida las ve de una en una. Las cajas acumuladas contra el tope
    quedan pegadas: la fotocélula del tope no las distingue. *)
+
+(* Cómo probarlo: pulsa Play (▶). Para accionar un pulsador, selecciónalo en la lista Scene
+   (por ejemplo «Pulsador Marcha») y pulsa la tecla C. En la pestaña Watch ves las variables.
+   Cuando creas que está, pulsa «Run tests» (junto a Play): es el juez de la misión. *)
 VAR_INPUT
   Marcha : BOOL;              (* pulsador de marcha: TRUE solo mientras se pulsa *)
   Paro : BOOL;                (* pulsador de paro: TRUE solo mientras se pulsa *)

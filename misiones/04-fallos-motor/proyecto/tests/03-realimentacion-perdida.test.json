@@ -6,7 +6,7 @@
     { "at": 0.6, "tag": "Marcha", "value": false }
   ],
   "faults": [
-    { "at": 1.0, "part": "m1", "kind": "sensorStuck", "value": false }
+    { "at": 1.0, "part": "belt-conveyor-1", "kind": "sensorStuck", "value": false }
   ],
   "checks": [
     { "at": 0.9, "tag": "Realimentacion", "equals": true },

@@ -10,7 +10,13 @@
     "parts/oip.diffuse-sensor",
     "parts/oip.push-button",
     "parts/oip.despawner",
-    "parts/oip.blade-stop"
+    "parts/oip.blade-stop",
+    "parts/oip.floor-marking",
+    "parts/oip.rack",
+    "parts/oip.guard-rail",
+    "parts/oip.bollards",
+    "parts/oip.unit-load",
+    "parts/oip.pallet"
   ],
   "program": [
     "plc/program.st"

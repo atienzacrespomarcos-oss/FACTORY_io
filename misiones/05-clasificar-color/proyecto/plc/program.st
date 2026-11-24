@@ -12,6 +12,10 @@
    Datos útiles: la cinta va a 1 m/s y las cajas miden 0,6 m. Cuando la fotocélula detecta el
    frente de una caja, su centro está a unos 0,67 m del centro del empujador. El empujador tarda
    0,25 s en salir del todo. *)
+
+(* Cómo probarlo: pulsa Play (▶). Para accionar un pulsador, selecciónalo en la lista Scene
+   (por ejemplo «Pulsador Marcha») y pulsa la tecla C. En la pestaña Watch ves las variables.
+   Cuando creas que está, pulsa «Run tests» (junto a Play): es el juez de la misión. *)
 VAR_INPUT
   Marcha : BOOL;            (* pulsador de marcha: TRUE solo mientras se pulsa *)
   Paro : BOOL;              (* pulsador de paro: TRUE solo mientras se pulsa *)

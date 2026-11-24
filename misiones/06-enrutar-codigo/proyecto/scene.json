@@ -19,7 +19,8 @@
         "keepSpacing": true,
         "conveyorId": "belt-conveyor-1",
         "runTag": "Alimentador"
-      }
+      },
+      "name": "Alimentador de cajas"
     },
     {
       "id": "belt-conveyor-1",
@@ -42,7 +43,8 @@
         "speed": 1,
         "standHeight": 0.8,
         "runTag": "CintaMarcha"
-      }
+      },
+      "name": "Cinta (CintaMarcha)"
     },
     {
       "id": "diffuse-sensor-1",
@@ -57,7 +59,8 @@
       "params": {
         "tag": "FotocelulaA",
         "maxRange": 1.564
-      }
+      },
+      "name": "Fotocélula (FotocelulaA)"
     },
     {
       "id": "diverter-1",
@@ -72,7 +75,8 @@
       "params": {
         "divertDistance": 1.5,
         "tag": "DesviadorA"
-      }
+      },
+      "name": "Empujador (DesviadorA)"
     },
     {
       "id": "diffuse-sensor-2",
@@ -87,7 +91,8 @@
       "params": {
         "tag": "FotocelulaB",
         "maxRange": 1.564
-      }
+      },
+      "name": "Fotocélula (FotocelulaB)"
     },
     {
       "id": "diverter-2",
@@ -102,7 +107,8 @@
       "params": {
         "divertDistance": 1.5,
         "tag": "DesviadorB"
-      }
+      },
+      "name": "Empujador (DesviadorB)"
     },
     {
       "id": "push-button-1",
@@ -116,10 +122,11 @@
       "rotationY": 3.141593,
       "params": {
         "tag": "Marcha",
-        "text": "START",
+        "text": "MARCHA",
         "buttonColor": "#2e9e44"
       },
-      "parent": "belt-conveyor-1"
+      "parent": "belt-conveyor-1",
+      "name": "Pulsador Marcha"
     },
     {
       "id": "push-button-2",
@@ -132,9 +139,11 @@
       ],
       "rotationY": 3.141593,
       "params": {
-        "tag": "Paro"
+        "tag": "Paro",
+        "text": "PARO"
       },
-      "parent": "belt-conveyor-1"
+      "parent": "belt-conveyor-1",
+      "name": "Pulsador Paro"
     },
     {
       "id": "despawner-1",
@@ -148,7 +157,9 @@
       "rotationY": 0,
       "params": {
         "countTag": "CajasRecto"
-      }
+      },
+      "name": "Sumidero (CajasRecto)",
+      "visible": false
     },
     {
       "id": "cinta-a",
@@ -170,7 +181,8 @@
         ],
         "speed": 1,
         "runTag": "CintaMarcha"
-      }
+      },
+      "name": "Cinta (CintaMarcha)"
     },
     {
       "id": "cinta-b",
@@ -192,7 +204,8 @@
         ],
         "speed": 1,
         "runTag": "CintaMarcha"
-      }
+      },
+      "name": "Cinta (CintaMarcha)"
     },
     {
       "id": "sumidero-a",
@@ -206,7 +219,9 @@
       "rotationY": 0,
       "params": {
         "countTag": "CajasA"
-      }
+      },
+      "name": "Sumidero (CajasA)",
+      "visible": false
     },
     {
       "id": "sumidero-b",
@@ -220,7 +235,9 @@
       "rotationY": 0,
       "params": {
         "countTag": "CajasB"
-      }
+      },
+      "name": "Sumidero (CajasB)",
+      "visible": false
     },
     {
       "id": "lector",
@@ -236,7 +253,218 @@
         "width": 1.8,
         "readTag": "LecturaOk",
         "codeTag": "CodigoDestino"
-      }
+      },
+      "name": "Lector de códigos"
+    },
+    {
+      "id": "deco-zona",
+      "type": "part",
+      "packageId": "oip.floor-marking",
+      "position": [
+        5.63,
+        0,
+        -1.29
+      ],
+      "rotationY": 0,
+      "params": {
+        "length": 13.48,
+        "width": 8.73,
+        "style": "border",
+        "borderWidth": 0.15
+      },
+      "name": "Zona de trabajo"
+    },
+    {
+      "id": "deco-estanteria-1",
+      "type": "part",
+      "packageId": "oip.rack",
+      "position": [
+        0.03,
+        0,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "numShelves": 3,
+        "aisle": "A"
+      },
+      "name": "Estantería A"
+    },
+    {
+      "id": "deco-estanteria-2",
+      "type": "part",
+      "packageId": "oip.rack",
+      "position": [
+        5.63,
+        0,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "numShelves": 3,
+        "aisle": "B"
+      },
+      "name": "Estantería B"
+    },
+    {
+      "id": "deco-estanteria-3",
+      "type": "part",
+      "packageId": "oip.rack",
+      "position": [
+        11.23,
+        0,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "numShelves": 3,
+        "aisle": "C"
+      },
+      "name": "Estantería C"
+    },
+    {
+      "id": "deco-barandilla",
+      "type": "part",
+      "packageId": "oip.guard-rail",
+      "position": [
+        5.63,
+        0,
+        3.98
+      ],
+      "rotationY": 0,
+      "params": {
+        "length": 13.48
+      },
+      "name": "Barandilla de protección"
+    },
+    {
+      "id": "deco-bolardos-1",
+      "type": "part",
+      "packageId": "oip.bollards",
+      "position": [
+        -1.71,
+        0,
+        3.98
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "count": 2
+      },
+      "name": "Bolardos"
+    },
+    {
+      "id": "deco-bolardos-2",
+      "type": "part",
+      "packageId": "oip.bollards",
+      "position": [
+        12.97,
+        0,
+        3.98
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "count": 2
+      },
+      "name": "Bolardos"
+    },
+    {
+      "id": "deco-carga-1-1",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        -1.32,
+        1.63,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "wrapped": true,
+        "loadId": "L-0101"
+      },
+      "name": "Carga paletizada"
+    },
+    {
+      "id": "deco-carga-1-2",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        1.38,
+        3.23,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "loadId": "L-0102",
+        "courses": 2,
+        "caseColor": "#c8a06a"
+      },
+      "name": "Carga paletizada"
+    },
+    {
+      "id": "deco-carga-2-1",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        6.98,
+        1.63,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "wrapped": true,
+        "loadId": "L-0201"
+      },
+      "name": "Carga paletizada"
+    },
+    {
+      "id": "deco-carga-2-2",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        4.28,
+        3.23,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "loadId": "L-0202",
+        "courses": 2,
+        "caseColor": "#c8a06a"
+      },
+      "name": "Carga paletizada"
+    },
+    {
+      "id": "deco-carga-3-1",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        9.88,
+        1.63,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "wrapped": true,
+        "loadId": "L-0301"
+      },
+      "name": "Carga paletizada"
+    },
+    {
+      "id": "deco-carga-3-2",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        12.58,
+        3.23,
+        -7.85
+      ],
+      "rotationY": 0,
+      "params": {
+        "loadId": "L-0302",
+        "courses": 2,
+        "caseColor": "#c8a06a"
+      },
+      "name": "Carga paletizada"
     }
   ]
 }

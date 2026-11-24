@@ -12,6 +12,10 @@
    0,25 s en salir (como en la misión 5). Las cajas viajan separadas unos 3 m, y entre el lector y
    el último empujador puede haber varias a la vez: el programa tiene que saber qué código lleva
    cada una. Ojo: las fotocélulas A y B también están a 3 m entre sí. *)
+
+(* Cómo probarlo: pulsa Play (▶). Para accionar un pulsador, selecciónalo en la lista Scene
+   (por ejemplo «Pulsador Marcha») y pulsa la tecla C. En la pestaña Watch ves las variables.
+   Cuando creas que está, pulsa «Run tests» (junto a Play): es el juez de la misión. *)
 VAR_INPUT
   Marcha : BOOL;            (* pulsador de marcha: TRUE solo mientras se pulsa *)
   Paro : BOOL;              (* pulsador de paro: TRUE solo mientras se pulsa *)

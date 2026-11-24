@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Misiones · Fábrica PLC</title>
-    <meta name="description" content="Misiones de programación PLC con juez automático: monta, programa y supera cada reto." />
+    <title>Academia · Fábrica PLC</title>
+    <meta name="description" content="Academia de Fábrica PLC: ejercicios cortos de programación PLC con juez automático." />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -74,18 +74,22 @@
       </div>
     </header>
     <main class="wrap">
-      <h1>Misiones</h1>
-      <p class="lead">Cada misión es una fábrica ya montada con un objetivo. Tú escribes el programa del PLC; un juez automático
-        lo prueba con la física real del simulador. Se supera cuando pasan todos los tests.</p>
+      <h1>Academia</h1>
+      <p class="lead">Ejercicios cortos para entrenar conceptos sueltos de PLC, cada uno en una instalación pequeña ya montada.
+        Tú escribes el programa; un juez automático lo prueba con la física real del simulador. Se supera cuando pasan todos los tests.</p>
       <ol class="pasos">
         <li>Pulsa <b>Jugar</b>: se abre la fábrica de la misión.</li>
-        <li>Abre la pestaña <b>PLC</b> (abajo) y escribe tu programa debajo de «Tu programa». Prueba con <b>Play</b>.</li>
-        <li>Cuando creas que está, ejecuta <b>Simulation → Run Project Tests</b> (o búscalo con la paleta de comandos).</li>
+        <li>Abre la pestaña <b>PLC</b> (abajo) y escribe tu programa debajo de «Tu programa».</li>
+        <li>Pulsa <b>Play</b> (▶). Para accionar un pulsador, selecciónalo en la lista <b>Scene</b>
+          (por ejemplo «Pulsador Marcha») o haz clic sobre él en la escena, y pulsa la tecla <b>C</b>.
+          En la pestaña <b>Watch</b> ves el valor de cada variable en directo.</li>
+        <li>Cuando creas que está, pulsa el botón naranja <b>Run tests</b>, junto a Play: es el juez.</li>
         <li>Vuelve aquí con el logotipo de la barra de la app: verás tu progreso.</li>
       </ol>
+      <p class="nota">La app está en inglés. En Chrome, si aceptas el aviso de traducción, la interfaz se traduce sola.</p>
       <div id="aviso" class="aviso" hidden></div>
       <p class="resumen" id="resumen"></p>
-      <div class="lista" id="lista"><p class="resumen">Cargando misiones…</p></div>
+      <div class="lista" id="lista"><p class="resumen">Cargando ejercicios…</p></div>
     </main>
     <footer>
       <div class="wrap">
@@ -186,9 +190,9 @@
             lista.append(tarjeta(m, p, !anteriorSuperada))
             anteriorSuperada = !!(p && p.superada)
           }
-          resumen.textContent = `${superadas} de ${misiones.length} misiones superadas.`
+          resumen.textContent = `${superadas} de ${misiones.length} ejercicios superados.`
         } catch (e) {
-          lista.replaceChildren(el('p', { class: 'resumen' }, `No se pudo cargar la lista de misiones (${e.message}).`))
+          lista.replaceChildren(el('p', { class: 'resumen' }, `No se pudo cargar la lista de ejercicios (${e.message}).`))
         }
         try {
           localStorage.getItem(PROGRESS_KEY)

@@ -322,3 +322,15 @@
   }
 }
 
+
+/* Fábrica PLC: el botón del juez de la misión, junto a la velocidad */
+.run-button.run-tests {
+  margin-left: 6px;
+  background: #b5651d;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.run-button.run-tests:hover:not(:disabled) {
+  background: #cc7426;
+}

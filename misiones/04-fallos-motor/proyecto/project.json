@@ -1,10 +1,20 @@
 {
   "version": 7,
   "name": "Misión 4 · Motor con vigilancia de fallos",
-  "packages": [
-    "parts/demo.motor"
-  ],
   "scene": "scene.json",
+  "packages": [
+    "parts/oip.box-spawner",
+    "parts/oip.box",
+    "parts/oip.belt-conveyor",
+    "parts/oip.push-button",
+    "parts/oip.despawner",
+    "parts/oip.floor-marking",
+    "parts/oip.rack",
+    "parts/oip.guard-rail",
+    "parts/oip.bollards",
+    "parts/oip.unit-load",
+    "parts/oip.pallet"
+  ],
   "program": [
     "plc/program.st"
   ],

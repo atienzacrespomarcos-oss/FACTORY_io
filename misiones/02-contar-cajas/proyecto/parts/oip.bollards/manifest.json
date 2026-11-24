@@ -1,0 +1,21 @@
+{
+  "id": "oip.bollards",
+  "name": "Safety Bollards",
+  "category": "Structure",
+  "geometry": {
+    "kind": "drawn",
+    "bounds": {
+      "length": 5.07,
+      "width": 0.27,
+      "top": 0.9
+    }
+  },
+  "materials": [],
+  "origin": {
+    "app": "v2:5812:18f6vklfku8"
+  },
+  "sdk": {
+    "level": 18,
+    "of": "v2:5812:18f6vklfku8"
+  }
+}

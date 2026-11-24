@@ -5,6 +5,10 @@
    Rearme pone Cajas a 0 y quita LoteCompleto; después, Marcha empieza otro lote.
    Mientras el lote esté completo, Marcha no debe arrancar nada.
    Marcha y Paro funcionan como en la misión 1. *)
+
+(* Cómo probarlo: pulsa Play (▶). Para accionar un pulsador, selecciónalo en la lista Scene
+   (por ejemplo «Pulsador Marcha») y pulsa la tecla C. En la pestaña Watch ves las variables.
+   Cuando creas que está, pulsa «Run tests» (junto a Play): es el juez de la misión. *)
 VAR_INPUT
   FotocelulaSalida : BOOL;  (* fotocélula al final de la cinta: TRUE con caja delante *)
   Marcha : BOOL;            (* pulsador verde: TRUE solo mientras se pulsa *)

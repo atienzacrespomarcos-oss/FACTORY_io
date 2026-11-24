@@ -54,7 +54,33 @@ export function viewportKey(store: EditorStore): string {
 export function openingView(store: EditorStore): { px: number; py: number; pz: number; tx: number; ty: number; tz: number } {
   // A `?scene=demo` visit opens on the palletizing cell rather than the default, which frames world
   // zero - the infeed tail here, with the arm cropped at the frame edge (see DEMO_OPENING_VIEW).
-  return store.demoSession ? { ...DEMO_OPENING_VIEW } : { ...DEFAULT_CAMERA_POSE }
+  if (store.demoSession) return { ...DEMO_OPENING_VIEW }
+  return lineOpeningView(store.getState().scene.parts) ?? { ...DEFAULT_CAMERA_POSE }
+}
+
+/**
+ * Fábrica PLC: the opening view of a scene with parts frames them, instead of world zero from a fixed spot, so a
+ * mission opens on its line. Read from the parts' positions, since nothing is drawn yet when the camera is placed.
+ * Seen from the front (+Z) and a little to the right and above, at a distance that fits the parts' extent.
+ * Null for an empty scene, which keeps the default.
+ */
+function lineOpeningView(parts: readonly { kind?: string; position?: readonly number[] }[]): { px: number; py: number; pz: number; tx: number; ty: number; tz: number } | null {
+  const ps = parts.filter((p) => p.kind !== 'building' && Array.isArray(p.position) && p.position.length === 3)
+  if (ps.length === 0) return null
+  let minX = Infinity, maxX = -Infinity, minZ = Infinity, maxZ = -Infinity
+  for (const p of ps) {
+    const [x, , z] = p.position as readonly [number, number, number]
+    minX = Math.min(minX, x)
+    maxX = Math.max(maxX, x)
+    minZ = Math.min(minZ, z)
+    maxZ = Math.max(maxZ, z)
+  }
+  const cx = (minX + maxX) / 2
+  const cz = (minZ + maxZ) / 2
+  const radius = Math.max(Math.hypot(maxX - minX, maxZ - minZ) / 2, 3)
+  const dir = new Vector3(0.3, 0.55, 0.78).normalize()
+  const dist = radius * 1.7 + 2
+  return { px: cx + dir.x * dist, py: 0.8 + dir.y * dist, pz: cz + dir.z * dist, tx: cx, ty: 0.8, tz: cz }
 }
 
 /** Put the camera on this scene's remembered pose, or its opening view when it has none. */

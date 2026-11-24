@@ -2,12 +2,16 @@
   "orden": 4,
   "titulo": "Motor con vigilancia de fallos",
   "nivel": "Intermedio",
-  "objetivo": "Arranca y para un motor, vigila que confirme que gira y que la comunicación siga viva, y bloquea la marcha con un fallo que solo se borra con Rearme cuando ya no está presente.",
-  "aprenderas": ["Vigilancia de realimentación con TON", "Fallos con memoria", "Por qué el rearme se evalúa antes que el fallo"],
+  "objetivo": "Arranca y para el motor de una cinta, vigila que confirme que gira y que la comunicación siga viva, y bloquea la marcha con un fallo que solo se borra con Rearme cuando ya no está presente.",
+  "aprenderas": [
+    "Vigilancia de realimentación con TON",
+    "Fallos con memoria",
+    "Por qué el rearme se evalúa antes que el fallo"
+  ],
   "pistas": [
     "Si ordenas marcha y el motor no confirma Realimentacion, algo va mal. ¿Cuánto esperas antes de decidirlo?",
     "Un TON con IN := OrdenMarcha AND NOT Realimentacion y PT := T#500ms detecta la falta de confirmación.",
     "Escribe el IF de Rearme antes que el de los fallos: así un fallo todavía presente vuelve a activarse en el mismo ciclo."
   ],
-  "origen": "Escena y tests adaptados del ejemplo start-stop-motor de Open Industry Project (MIT)."
+  "origen": "Pruebas adaptadas del ejemplo start-stop-motor de Open Industry Project (MIT); la escena es propia."
 }

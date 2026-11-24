@@ -137,6 +137,8 @@ const M = defineMessages('toolbar', {
   openDesktopCopy: 'Opens a copy of this project in the desktop app; this browser keeps its own',
   github: 'Fábrica PLC en GitHub',
   missions: 'Missions',
+  runTests: 'Run tests',
+  runTestsTitle: "Run this project's tests. In a mission they are the judge: pass them all to complete it",
 })
 
 /** a command's label, through the seam (commands.ts) */
@@ -439,6 +441,12 @@ export function Toolbar({ store, state, controller }: ToolbarProps) {
         >
           {state.timeScale}×{speedShort && <span className="speed-actual">~{state.speedActual}×</span>}
         </button>
+        {/* Fábrica PLC: el juez de una misión (sus tests) a la vista; antes solo estaba en la paleta de comandos */}
+        {state.testCount > 0 && (
+          <button className="run-button run-tests" data-testid="run-tests" title={t(M.runTestsTitle)} onClick={() => runCommand('sim.runTests')}>
+            {t(M.runTests)}
+          </button>
+        )}
         {/* Phone twin of that button's shortfall readout. On a phone the speed button is dropped
             from the bar (CSS) and a `title` is unreachable by touch, so the device MOST likely to
             fall short of real time was the one saying nothing about it. Tapping opens the reason as
