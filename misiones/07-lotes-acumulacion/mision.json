@@ -1,0 +1,17 @@
+{
+  "orden": 7,
+  "titulo": "Lotes de 3 para el muelle",
+  "nivel": "Avanzado",
+  "objetivo": "Centro logístico, muelle de carga: acumula las cajas, que llegan a ritmo irregular, contra un tope en la cinta de rodillos y suéltalas en lotes de exactamente 3, sin pasar nunca de 3 cajas en los rodillos y aunque se pare la línea a mitad de lote.",
+  "aprenderas": [
+    "Máquina de estados con CASE",
+    "Acumulación con tope",
+    "Contar entradas y salidas",
+    "Llamar flancos y temporizadores fuera del CASE"
+  ],
+  "pistas": [
+    "Piensa en dos fases: acumulando (tope arriba) y liberando (tope abajo). Guarda la fase en una variable INT y usa CASE.",
+    "Cuenta las cajas que entran en los rodillos. Si la entrada sigue funcionando mientras liberas, ¿cuántas cajas salen?",
+    "Para la entrada al tener 3 dentro. Para volver a acumular, cuenta las salidas en la cinta de salida y sube el tope al llegar a 3. Llama a R_TRIG y TON fuera del CASE."
+  ]
+}

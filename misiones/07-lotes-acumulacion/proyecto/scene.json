@@ -1,0 +1,191 @@
+{
+  "version": 4,
+  "parts": [
+    {
+      "id": "box-spawner-1",
+      "type": "part",
+      "packageId": "oip.box-spawner",
+      "position": [
+        0.45,
+        1.25,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "boxesPerMinute": 30,
+        "boxColors": "#c8a06a",
+        "keepSpacing": true,
+        "conveyorId": "belt-conveyor-1",
+        "runTag": "Alimentador",
+        "fixedRate": false
+      }
+    },
+    {
+      "id": "belt-conveyor-1",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        0.085,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            3,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaEntrada",
+        "standHeight": 0.8
+      }
+    },
+    {
+      "id": "roller-conveyor-1",
+      "type": "part",
+      "packageId": "oip.roller-conveyor",
+      "position": [
+        5.17,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "runTag": "Rodillos",
+        "standHeight": 0.8
+      }
+    },
+    {
+      "id": "belt-conveyor-2",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        7.255,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            3,
+            0
+          ]
+        ],
+        "runTag": "CintaSalida",
+        "standHeight": 0.8
+      }
+    },
+    {
+      "id": "diffuse-sensor-1",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        3.5,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaEntrada",
+        "maxRange": 1.564
+      }
+    },
+    {
+      "id": "diffuse-sensor-2",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        6.55,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaTope",
+        "maxRange": 1.564
+      }
+    },
+    {
+      "id": "diffuse-sensor-3",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        8.2,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaSalida",
+        "maxRange": 1.564
+      }
+    },
+    {
+      "id": "push-button-1",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.3,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "Marcha",
+        "text": "START",
+        "buttonColor": "#2e9e44"
+      },
+      "parent": "belt-conveyor-1"
+    },
+    {
+      "id": "push-button-2",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.55,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "Paro"
+      },
+      "parent": "belt-conveyor-1"
+    },
+    {
+      "id": "despawner-1",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        11.34,
+        0,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasCargadas"
+      }
+    },
+    {
+      "id": "tope",
+      "type": "part",
+      "packageId": "oip.blade-stop",
+      "position": [
+        6.7875,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "tag": "Tope",
+        "width": 1.494
+      }
+    }
+  ]
+}

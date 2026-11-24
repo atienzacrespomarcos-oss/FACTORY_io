@@ -1,0 +1,160 @@
+{
+  "name": "Paro a mitad de lote: no sale nada con la línea parada y, al rearrancar, los lotes siguen siendo de 3",
+  "duration": 60,
+  "inputs": [
+    {
+      "at": 0.5,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 1.0,
+      "tag": "Marcha",
+      "value": false
+    },
+    {
+      "at": 6.0,
+      "tag": "Paro",
+      "value": true
+    },
+    {
+      "at": 6.5,
+      "tag": "Paro",
+      "value": false
+    },
+    {
+      "at": 15.0,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 15.5,
+      "tag": "Marcha",
+      "value": false
+    }
+  ],
+  "checks": [
+    {
+      "always": true,
+      "from": 6.2,
+      "until": 14.9,
+      "tag": "CintaEntrada",
+      "equals": false
+    },
+    {
+      "always": true,
+      "from": 6.2,
+      "until": 14.9,
+      "tag": "Tope",
+      "equals": true
+    },
+    {
+      "always": true,
+      "from": 6.2,
+      "until": 14.9,
+      "max": 0,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              7.3,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              10.3,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "eventually": true,
+      "from": 15,
+      "min": 3,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              7.3,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              10.3,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 3,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              7.3,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              10.3,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "eventually": true,
+      "tag": "Lotes",
+      "min": 2
+    },
+    {
+      "always": true,
+      "max": 3,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              3.25,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              7.1,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              -20,
+              -1,
+              -20
+            ],
+            "max": [
+              20,
+              0.45,
+              20
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "version": 7,
+  "name": "Misión 7 · Lotes de 3 para el muelle",
+  "scene": "scene.json",
+  "packages": [
+    "parts/oip.box-spawner",
+    "parts/oip.box",
+    "parts/oip.belt-conveyor",
+    "parts/oip.roller-conveyor",
+    "parts/oip.diffuse-sensor",
+    "parts/oip.push-button",
+    "parts/oip.despawner",
+    "parts/oip.blade-stop"
+  ],
+  "program": [
+    "plc/program.st"
+  ],
+  "tests": [
+    "tests/01-lotes.test.json",
+    "tests/02-paro-a-mitad.test.json"
+  ]
+}

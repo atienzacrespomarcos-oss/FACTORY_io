@@ -1,0 +1,129 @@
+{
+  "name": "Las cajas salen hacia el muelle en lotes de exactamente 3",
+  "duration": 60,
+  "inputs": [
+    {
+      "at": 0.5,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 1.0,
+      "tag": "Marcha",
+      "value": false
+    }
+  ],
+  "checks": [
+    {
+      "always": true,
+      "until": 0.4,
+      "tag": "CintaEntrada",
+      "equals": false
+    },
+    {
+      "eventually": true,
+      "min": 3,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              7.3,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              10.3,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 3,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              7.3,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              10.3,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "eventually": true,
+      "min": 9,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              10.1,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              10.25,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "eventually": true,
+      "tag": "Lotes",
+      "min": 3
+    },
+    {
+      "always": true,
+      "max": 3,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              3.25,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              7.1,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              -20,
+              -1,
+              -20
+            ],
+            "max": [
+              20,
+              0.45,
+              20
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
