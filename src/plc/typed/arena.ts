@@ -1,0 +1,157 @@
+// A typed controller's memory: one ArrayBuffer, sized when the program is compiled and never replaced, and the ten
+// views every access goes through (docs/plc-typed-storage.md, "The arena"). Addresses are bytes; a place's layout
+// (layout.ts) aligns it to its own size, so `I32[addr >> 2]` is exact.
+
+import { WATCH_KIND } from '../../core/watchTable'
+import { tagOfBig } from '../runtime'
+import type { NumberCells, ScalarType, TagValue, Value } from '../types'
+import type { ScalarLayout } from './layout'
+
+/** the most code units handed to String.fromCharCode in one call: its arguments go on the stack */
+const STR_CHUNK = 4096
+const unitsToString = String.fromCharCode.apply.bind(String.fromCharCode) as (thisArg: null, units: number[]) => string
+
+// An arena is a WebAssembly memory: each body is a WebAssembly module over it (scanWasm.ts).
+const wasmMemories = new WeakMap<ArrayBuffer, WebAssembly.Memory>()
+/** the WebAssembly memory an arena's buffer is, when it is one */
+export function memoryOf(buffer: ArrayBuffer): WebAssembly.Memory | undefined {
+  return wasmMemories.get(buffer)
+}
+
+export class Arena {
+  readonly buffer: ArrayBuffer
+  readonly I8: Int8Array
+  readonly U8: Uint8Array
+  readonly I16: Int16Array
+  readonly U16: Uint16Array
+  readonly I32: Int32Array
+  readonly U32: Uint32Array
+  readonly F32: Float32Array
+  readonly F64: Float64Array
+  /** the 64-bit integers: LINT through the signed view, ULINT and LWORD through the unsigned one */
+  readonly I64: BigInt64Array
+  readonly U64: BigUint64Array
+
+  constructor(bytes: number) {
+    // (a memory is whole 64 KB pages, so every view covers all of it)
+    const mem = new WebAssembly.Memory({ initial: Math.max(1, Math.ceil(bytes / 65536)) })
+    this.buffer = mem.buffer
+    wasmMemories.set(this.buffer, mem)
+    this.I8 = new Int8Array(this.buffer)
+    this.U8 = new Uint8Array(this.buffer)
+    this.I16 = new Int16Array(this.buffer)
+    this.U16 = new Uint16Array(this.buffer)
+    this.I32 = new Int32Array(this.buffer)
+    this.U32 = new Uint32Array(this.buffer)
+    this.F32 = new Float32Array(this.buffer)
+    this.F64 = new Float64Array(this.buffer)
+    this.I64 = new BigInt64Array(this.buffer)
+    this.U64 = new BigUint64Array(this.buffer)
+  }
+
+  /** The value of the scalar at `addr`, as the engine's surfaces answer it: a BOOL a boolean, a STRING text, a 64-bit
+   *  integer a number while a number holds it exactly and its decimal digits past that (types.ts TagValue). */
+  load(slot: ScalarLayout, addr: number): TagValue {
+    switch (slot.scalar) {
+      case 'LINT': return tagOfBig(this.I64[addr >> 3]!)
+      case 'ULINT': case 'LWORD': return tagOfBig(this.U64[addr >> 3]!)
+      case 'BOOL': return this.U8[addr] !== 0
+      case 'SINT': return this.I8[addr]!
+      case 'USINT': case 'BYTE': return this.U8[addr]!
+      case 'INT': return this.I16[addr >> 1]!
+      case 'UINT': case 'WORD': return this.U16[addr >> 1]!
+      case 'DINT': return this.I32[addr >> 2]!
+      case 'UDINT': case 'DWORD': return this.U32[addr >> 2]!
+      case 'REAL': return this.F32[addr >> 2]!
+      case 'LREAL': case 'TIME': case 'DATE': case 'TOD': case 'DT': return this.F64[addr >> 3]!
+      case 'STRING': return this.strAt(addr)
+    }
+  }
+
+  /** The value of the scalar at `addr` as the engine itself holds it: {@link load}'s, but a 64-bit integer a bigint. */
+  raw(slot: ScalarLayout, addr: number): Value {
+    if (slot.scalar === 'LINT') return this.I64[addr >> 3]!
+    if (slot.scalar === 'ULINT' || slot.scalar === 'LWORD') return this.U64[addr >> 3]!
+    return this.load(slot, addr)
+  }
+
+  /** Where the scalar at `addr` is as one stored number: the view that holds it, and its index there. None for a
+   *  STRING, which is a length and its characters, and none for a 64-bit integer, which no number view holds. */
+  cell(slot: ScalarLayout, addr: number): { cells: NumberCells; index: number } | undefined {
+    switch (slot.scalar) {
+      case 'BOOL': case 'USINT': case 'BYTE': return { cells: this.U8, index: addr }
+      case 'SINT': return { cells: this.I8, index: addr }
+      case 'INT': return { cells: this.I16, index: addr >> 1 }
+      case 'UINT': case 'WORD': return { cells: this.U16, index: addr >> 1 }
+      case 'DINT': return { cells: this.I32, index: addr >> 2 }
+      case 'UDINT': case 'DWORD': return { cells: this.U32, index: addr >> 2 }
+      case 'REAL': return { cells: this.F32, index: addr >> 2 }
+      case 'LREAL': case 'TIME': case 'DATE': case 'TOD': case 'DT': return { cells: this.F64, index: addr >> 3 }
+      case 'STRING': case 'LINT': case 'ULINT': case 'LWORD': return undefined
+    }
+  }
+
+  /** Store a value already in the slot's form (coerced by the store rules, pou.ts), as the slot's view holds it. */
+  store(slot: ScalarLayout, addr: number, v: Value): void {
+    switch (slot.scalar) {
+      case 'LINT': this.I64[addr >> 3] = v as bigint; return
+      case 'ULINT': case 'LWORD': this.U64[addr >> 3] = v as bigint; return
+      case 'BOOL': this.U8[addr] = v ? 1 : 0; return
+      case 'SINT': this.I8[addr] = v as number; return
+      case 'USINT': case 'BYTE': this.U8[addr] = v as number; return
+      case 'INT': this.I16[addr >> 1] = v as number; return
+      case 'UINT': case 'WORD': this.U16[addr >> 1] = v as number; return
+      case 'DINT': this.I32[addr >> 2] = v as number; return
+      case 'UDINT': case 'DWORD': this.U32[addr >> 2] = v as number; return
+      case 'REAL': this.F32[addr >> 2] = v as number; return
+      case 'LREAL': case 'TIME': case 'DATE': case 'TOD': case 'DT': this.F64[addr >> 3] = v as number; return
+      case 'STRING': this.strPut(addr, slot.cap!, v as string)
+    }
+  }
+
+  /** A STRING's text: its length (U16) then that many UTF-16 code units. */
+  strAt(addr: number): string {
+    const at = addr >> 1
+    const n = this.U16[at]!
+    if (n === 0) return ''
+    // the whole text in one call. Joined a character at a time, reading the status strings a line's drive blocks
+    // build every scan took a twentieth of a large program's scan.
+    if (n <= STR_CHUNK) return unitsToString(null, this.U16.subarray(at + 1, at + 1 + n) as unknown as number[])
+    let s = ''
+    for (let i = 0; i < n; i += STR_CHUNK) s += unitsToString(null, this.U16.subarray(at + 1 + i, at + 1 + Math.min(n, i + STR_CHUNK)) as unknown as number[])
+    return s
+  }
+
+  /** Write text into a STRING of capacity `cap`, cut to fit (a store already cut it: this keeps the slot whole whatever). */
+  strPut(addr: number, cap: number, s: string): void {
+    const at = addr >> 1
+    const n = Math.min(s.length, cap)
+    this.U16[at] = n
+    for (let i = 0; i < n; i++) this.U16[at + 1 + i] = s.charCodeAt(i)
+  }
+
+  /** Copy `bytes` from `src` to `dst` (a whole array or struct of one type: the checker allows nothing else). */
+  copy(dst: number, src: number, bytes: number): void {
+    if (dst !== src) this.U8.copyWithin(dst, src, src + bytes)
+  }
+}
+
+/** How {@link Arena.load} reads a scalar type, as a watch layout names it (core/watchTable.ts): the two must agree,
+ *  which watchPlan.test.ts holds them to. */
+export function watchKindOf(t: ScalarType): number {
+  switch (t) {
+    case 'BOOL': return WATCH_KIND.BOOL
+    case 'SINT': return WATCH_KIND.I8
+    case 'USINT': case 'BYTE': return WATCH_KIND.U8
+    case 'INT': return WATCH_KIND.I16
+    case 'UINT': case 'WORD': return WATCH_KIND.U16
+    case 'DINT': return WATCH_KIND.I32
+    case 'UDINT': case 'DWORD': return WATCH_KIND.U32
+    case 'REAL': return WATCH_KIND.F32
+    case 'LREAL': case 'TIME': case 'DATE': case 'TOD': case 'DT': return WATCH_KIND.F64
+    case 'STRING': return WATCH_KIND.STRING
+    case 'LINT': return WATCH_KIND.I64
+    case 'ULINT': case 'LWORD': return WATCH_KIND.U64
+  }
+}
+

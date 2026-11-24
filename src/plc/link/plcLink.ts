@@ -1,0 +1,597 @@
+// The seam between the simulation and a controller. Everything the sim needs is a
+// named-tag IO map (sensors in, actuators out) + one scan per tick. This decouples
+// the sim from *what* runs the logic:
+//   - LocalPlcLink  -> an ST program compiled + interpreted in this thread (training)
+//   - (future) WsPlcLink -> a real PLC / FTEcho / soft-PLC reached over WebSocket (demos)
+// When the sim grows a device-signal bus, it talks to this interface, not to either
+// backend directly.
+
+import { compile } from '../interpreter'
+import type { CompiledProgram, NumberCells, TagCell, TagPort, TagValue, TaskInfo, VarInfo, WatchPlan } from '../types'
+
+export interface PlcLink {
+  readonly inputs: string[]
+  readonly outputs: string[]
+  /** snapshot of all variables, for a watch/monitor table */
+  readonly watch: Readonly<Record<string, TagValue>>
+  /** everything the controller holds, large arrays included (CompiledProgram.memory); a remote link may not have it */
+  readonly memory?: Readonly<Record<string, TagValue>>
+  /**
+   * One control cycle: write the given input tags, run a scan of `dt` seconds,
+   * and return the resulting output tags. Inputs absent from the program are ignored.
+   */
+  step(inputs: Readonly<Record<string, TagValue>>, dt: number, inputsRev?: number): Record<string, TagValue>
+  /** A controller's tasks (CompiledProgram.tasks). Absent or empty when the link runs one program
+   *  on its host's scan time - which is every remote link: a real PLC schedules its own tasks. */
+  readonly tasks?: readonly TaskInfo[]
+  /** {@link step}, for one task: write the inputs, scan task `index` by `dt`, return every output */
+  stepTask?(index: number, inputs: Readonly<Record<string, TagValue>>, dt: number, inputsRev?: number): Record<string, TagValue>
+  /** bare scene tag -> the program variable it also names ({@link soleInstanceAliases}); absent or empty for most links */
+  readonly aliases?: ReadonlyMap<string, string>
+  /** What kind of value the program variable `name` holds, when its declaration says ({@link valueKinds}); undefined
+   *  for a name it cannot answer for, which is then read off `watch`. Absent from a link that knows no declarations. */
+  declaredKind?(name: string): ValueKind | undefined
+}
+
+/** What a value of a program is, as far as a part's declared type can be held against it. */
+export type ValueKind = 'boolean' | 'number' | 'string'
+
+/** The kind of value the watch table shows for a variable of each of these types (programFactsKinds.test.ts holds
+ *  the two together). A type not listed is read off the table. */
+const PLAIN_KIND: Readonly<Record<string, ValueKind>> = {
+  BOOL: 'boolean',
+  SINT: 'number',
+  INT: 'number',
+  DINT: 'number',
+  USINT: 'number',
+  UINT: 'number',
+  UDINT: 'number',
+  REAL: 'number',
+  LREAL: 'number',
+}
+
+/**
+ * A reader of the kind of value each scene tag holds in `link`'s program: `typeof` what the watch table has for it,
+ * or undefined when the program holds no such value.
+ *
+ * A tag wired to a variable the program declares for a scene, by its own spelling, is answered from the declaration.
+ * Anything else (a member, an element, a type not in PLAIN_KIND) is read off the table, which is built then and at
+ * most once per reader: a large program's table holds hundreds of thousands of values and takes a third of a second
+ * to build, and a check of the wiring asks about a few thousand tags.
+ */
+export function valueKinds(link: Pick<PlcLink, 'watch' | 'aliases' | 'declaredKind'>): (tag: string) => ValueKind | undefined {
+  let table: Readonly<Record<string, TagValue>> | null = null
+  return (tag) => {
+    const name = link.aliases?.get(tag) ?? tag
+    const declared = link.declaredKind?.(name)
+    if (declared !== undefined) return declared
+    table ??= link.watch
+    const v = table[name]
+    return v === undefined ? undefined : (typeof v as ValueKind)
+  }
+}
+
+/**
+ * The bare names a controller that runs one program instance answers to: each of that instance's variables
+ * (`Line.Run`) is also the scene tag `Run`. Our own binding rule (IEC leaves how a program's variables meet the field
+ * to the implementation): a program pasted in its PROGRAM ... END_PROGRAM wrapper, the form a PLC exports and most ST
+ * is written in, runs as an instance whose variables are qualified, and a part wired to `Run` would otherwise never
+ * see it. The qualified name keeps working; the bare one is the same variable, not a copy.
+ *
+ * None with two or more instances (where `Run` would be ambiguous), or with code outside every PROGRAM (that code runs
+ * as an instance too, and its variables are the bare tags already). A bare name the program already has - a
+ * controller tag, a global - stays that variable's: an alias never shadows a name the program declares. Keyed by the
+ * declared spelling, as every other tag is. A watch path inside a block instance (`T1.Q`) is aliased too, for readers
+ * that look a value up by name ({@link LocalPlcLink.tagView}), but binds nothing.
+ */
+export function soleInstanceAliases(prog: Pick<CompiledProgram, 'tasks' | 'inputs' | 'outputs' | 'bindable' | 'watch'>): ReadonlyMap<string, string> {
+  const instances = prog.tasks.flatMap((t) => t.programs)
+  if (instances.length !== 1) return NO_ALIASES
+  const prefix = `${instances[0]!}.`
+  const P = prefix.toUpperCase()
+  const names = [...prog.inputs, ...prog.outputs, ...prog.bindable, ...Object.keys(prog.watch)]
+  const own = (n: string): boolean => n.toUpperCase().startsWith(P)
+  // IEC names are case-insensitive: a global `RUN` keeps the bare name from the instance's `Run`
+  const taken = new Set(names.filter((n) => !own(n)).map((n) => n.toUpperCase()))
+  const out = new Map<string, string>()
+  for (const n of names) {
+    if (!own(n)) continue
+    const bare = n.slice(prefix.length)
+    if (bare === '' || taken.has(bare.toUpperCase()) || out.has(bare)) continue
+    out.set(bare, n)
+  }
+  return out.size > 0 ? out : NO_ALIASES
+}
+
+const NO_ALIASES: ReadonlyMap<string, string> = new Map()
+
+/**
+ * {@link soleInstanceAliases}, with the work a large program makes of it put off until it is asked for.
+ *
+ * A program's `watch` lists every value it holds, and each one under the sole instance has a bare alias: 210,000 of
+ * them on an 800-part line, built on every attach (0.9 s of the stall at Play) and almost all never read. A scene
+ * binds by the names the program declares for it (its inputs, its outputs, what a part may wire), which are a few
+ * thousand, so those are worked out up front ({@link declared}) and are all that binding reads. Any other alias is a
+ * path inside a variable (`T1.Q`, `Zone[3].Run`), read by name now and then: the whole table is built the first
+ * time one is asked for that could exist, and never for a name the instance declares no variable for.
+ *
+ * It is a view of the same table, not a second rule: `get` answers what {@link soleInstanceAliases} would, and
+ * walking it walks that table (plcLinkAliases.test.ts holds the two together).
+ */
+export class Aliases implements ReadonlyMap<string, string> {
+  /** the aliases of the names a scene binds by: the program's inputs, outputs and bindable variables */
+  readonly declared: ReadonlyMap<string, string>
+  #all: ReadonlyMap<string, string> | null = null
+  /** an alias the instance's own variables cannot account for exists (see the constructor): never refuse by them */
+  readonly #anyRoot: boolean
+  /** the names that are not this instance's, upper-cased: a bare name one of them has is no alias */
+  readonly #taken: ReadonlySet<string>
+
+  constructor(
+    private readonly prog: AliasSource,
+    private readonly prefix: string,
+  ) {
+    const P = prefix.toUpperCase()
+    const own = (n: string): boolean => n.toUpperCase().startsWith(P)
+    const names = [...prog.inputs, ...prog.outputs, ...prog.bindable]
+    const shared = prog.sharedWatchKeys!()
+    // (every other key of `watch` is an instance's, so these are all the names that are not this instance's)
+    const taken = new Set([...names, ...shared].filter((n) => !own(n)).map((n) => n.toUpperCase()))
+    const out = new Map<string, string>()
+    for (const n of names) {
+      if (!own(n)) continue
+      const bare = n.slice(prefix.length)
+      if (bare === '' || taken.has(bare.toUpperCase()) || out.has(bare)) continue
+      out.set(bare, n)
+    }
+    this.declared = out
+    this.#taken = taken
+    // a tag or a global spelled like the instance (`Line`, with a member) lists keys that read as the instance's
+    this.#anyRoot = shared.some(own)
+  }
+
+  /** whether the whole table has been built (for the test that it is not, by a read that does not need it) */
+  get built(): boolean {
+    return this.#all !== null
+  }
+
+  #whole(): ReadonlyMap<string, string> {
+    return (this.#all ??= soleInstanceAliases(this.prog))
+  }
+
+  get(bare: string): string | undefined {
+    const bound = this.declared.get(bare)
+    if (bound !== undefined) return bound
+    if (this.#all) return this.#all.get(bare)
+    if (bare === '' || this.#taken.has(bare.toUpperCase())) return undefined
+    // an alias names a variable of the instance, or a path inside one: there is none where it declares no such variable
+    if (!this.#anyRoot && !this.prog.instanceDeclares!(this.prefix + bare)) return undefined
+    return this.#whole().get(bare)
+  }
+  has(bare: string): boolean {
+    return this.get(bare) !== undefined
+  }
+  get size(): number {
+    return this.#whole().size
+  }
+  forEach(fn: (value: string, key: string, map: ReadonlyMap<string, string>) => void, thisArg?: unknown): void {
+    this.#whole().forEach((v, k) => fn.call(thisArg, v, k, this))
+  }
+  entries(): MapIterator<[string, string]> {
+    return this.#whole().entries()
+  }
+  keys(): MapIterator<string> {
+    return this.#whole().keys()
+  }
+  values(): MapIterator<string> {
+    return this.#whole().values()
+  }
+  [Symbol.iterator](): MapIterator<[string, string]> {
+    return this.#whole()[Symbol.iterator]()
+  }
+}
+
+type AliasSource = Pick<CompiledProgram, 'tasks' | 'inputs' | 'outputs' | 'bindable' | 'watch' | 'sharedWatchKeys' | 'instanceDeclares'>
+
+/** A program's bare-name aliases ({@link soleInstanceAliases}), as a table that is built when it is needed. */
+export function aliasesOfProgram(prog: AliasSource): ReadonlyMap<string, string> {
+  const instances = prog.tasks.flatMap((t) => t.programs)
+  if (instances.length !== 1) return NO_ALIASES
+  // (a program that cannot say what its instances own is asked for everything, as before)
+  if (!prog.sharedWatchKeys || !prog.instanceDeclares) return soleInstanceAliases(prog)
+  return new Aliases(prog, `${instances[0]!}.`)
+}
+
+/** The aliases of the names a scene binds by (a program's inputs, outputs and bindable variables): all of them when
+ *  the table was not built on demand. Every alias whose variable is one of those names is among them. */
+export function declaredAliases(aliases: ReadonlyMap<string, string>): ReadonlyMap<string, string> {
+  return aliases instanceof Aliases ? aliases.declared : aliases
+}
+
+/** `names`, each followed by its bare alias when it has one. The names are ones a scene binds by. */
+function withAliases(names: readonly string[], aliases: ReadonlyMap<string, string>): string[] {
+  const bound = declaredAliases(aliases)
+  if (bound.size === 0) return [...names]
+  const bareOf = new Map([...bound].map(([bare, q]) => [q, bare]))
+  return names.flatMap((n) => {
+    const bare = bareOf.get(n)
+    return bare === undefined ? [n] : [n, bare]
+  })
+}
+
+/**
+ * The names a program binds under `wired` ({@link LocalPlcLink.bind}'s rule, on names alone): its declared inputs and
+ * outputs each with its bare alias, then what wiring adds of its bindable variables. Shared with a program known only
+ * by its surface (programSurface.ts), which must bind as the link does.
+ */
+export function boundNames(
+  program: { inputs: readonly string[]; outputs: readonly string[]; bindable: readonly string[] },
+  aliases: ReadonlyMap<string, string>,
+  wired: WiredBindings = { inputs: [], outputs: [] },
+): { inputs: string[]; outputs: string[]; bindable: string[] } {
+  const bindableNames = withAliases(program.bindable, aliases)
+  const bindable = new Set(bindableNames)
+  const declaredIn = withAliases(program.inputs, aliases)
+  const declaredOut = withAliases(program.outputs, aliases)
+  const declared = new Set([...declaredIn, ...declaredOut])
+  const extra = (names: readonly string[]): string[] => [...new Set(names)].filter((n) => bindable.has(n) && !declared.has(n))
+  const inputs = [...declaredIn, ...extra(wired.inputs)]
+  const taken = new Set(inputs)
+  return { inputs, outputs: [...declaredOut, ...extra(wired.outputs).filter((n) => !taken.has(n))], bindable: bindableNames }
+}
+// one alias table per compiled program: every link a program is re-bound through (withBindings) shares it
+const aliasesOf = new WeakMap<CompiledProgram, ReadonlyMap<string, string>>()
+
+/**
+ * The variables a scene binds to a program by wiring (plc/wiring.ts `wiredBindings`), beyond what the
+ * program declares as VAR_INPUT / VAR_OUTPUT: the parts decide which way each one goes.
+ */
+export interface WiredBindings {
+  inputs: string[]
+  outputs: string[]
+}
+
+export const NO_WIRED_BINDINGS: WiredBindings = Object.freeze({ inputs: [], outputs: [] }) as WiredBindings
+
+
+/** Some of a list's variables that are numbers in one view of the program's memory: `cells[at[k]]` is variable `of[k]`. */
+interface CellRun {
+  cells: NumberCells
+  at: Uint32Array
+  of: Uint32Array
+  /** the view holds REALs: a zero has a sign, which an integer's does not */
+  signed0: boolean
+}
+
+/** `ports`' cells that `pick` takes, a run for each view, each in the list's order. */
+function cellRuns(ports: readonly TagPort[], pick: (cell: TagCell) => boolean): CellRun[] {
+  const by = new Map<NumberCells, { at: number[]; of: number[] }>()
+  ports.forEach((p, i) => {
+    if (!p.cell || !pick(p.cell)) return
+    let run = by.get(p.cell.cells)
+    if (!run) by.set(p.cell.cells, (run = { at: [], of: [] }))
+    run.at.push(p.cell.index)
+    run.of.push(i)
+  })
+  return [...by].map(([cells, r]) => ({ cells, at: Uint32Array.from(r.at), of: Uint32Array.from(r.of), signed0: cells instanceof Float32Array || cells instanceof Float64Array }))
+}
+
+/** The inputs as a scan stores them (LocalPlcLink.cycle). */
+class InputCopy {
+  /** the caller's number for the inputs last looked up (PlcLink.step `inputsRev`); null when it gave none */
+  rev: number | null = null
+  /** each input: 1 when the inputs last looked up gave it a value */
+  readonly given: Uint8Array
+  /** the value last looked up, and the number it is stored as */
+  readonly seen: (TagValue | undefined)[]
+  readonly raw: Float64Array
+  readonly runs: CellRun[]
+  /** Every input is a number in memory, and a scan stores the numbers: view by view, each view's in the list's order,
+   *  so of two names of one variable the later one is what the scan reads, as it is through the handles. Otherwise
+   *  (a STRING, or one bit of a word, which may be an input beside the word) each is stored through its handle, one by
+   *  one in the list's order. */
+  readonly numbers: boolean
+
+  constructor(readonly ports: readonly TagPort[]) {
+    const n = ports.length
+    this.given = new Uint8Array(n)
+    this.seen = new Array<TagValue | undefined>(n).fill(undefined)
+    this.raw = new Float64Array(n)
+    this.runs = cellRuns(ports, (c) => c.writes)
+    this.numbers = ports.every((p) => p.cell?.writes === true)
+  }
+}
+
+/** In-process backend: compile an ST program and interpret it locally each tick. */
+export class LocalPlcLink implements PlcLink {
+  private readonly prog: CompiledProgram
+  #inputs: string[] = []
+  #outputs: string[] = []
+  // each input's and output's handle, resolved once (CompiledProgram.port) - every scan moves every one of them, and by
+  // name that was a regex and two case-insensitive lookups a tag, a scan. Rebuilt when bind() changes the lists.
+  #inPorts: TagPort[] | null = null
+  #outPorts: TagPort[] | null = null
+  // held forces, each resolved once (see setForces): written before every scan and again after it
+  #forces: { set: (v: TagValue) => void; value: TagValue }[] = []
+  /** bare scene tag -> the sole program instance's variable ({@link soleInstanceAliases}) */
+  readonly aliases: ReadonlyMap<string, string>
+
+  /** `wired`: the scene's bindings by wiring (see {@link bind}). */
+  constructor(source: string | CompiledProgram, wired: WiredBindings = NO_WIRED_BINDINGS) {
+    this.prog = typeof source === 'string' ? compile(source) : source
+    let aliases = aliasesOf.get(this.prog)
+    if (!aliases) aliasesOf.set(this.prog, (aliases = aliasesOfProgram(this.prog)))
+    this.aliases = aliases
+    this.bind(wired)
+  }
+
+  get inputs(): string[] {
+    return this.#inputs
+  }
+  get outputs(): string[] {
+    return this.#outputs
+  }
+
+  /**
+   * Bind the program to the scene's wiring (see {@link WiredBindings}): its declared I/O, plus these. In
+   * place, so a running program keeps every variable's value when a part is wired to it mid-run. A name
+   * the program cannot bind that way - undeclared, a constant, already an input or output - is ignored,
+   * so the list may come from a scene written against another version of the program.
+   *
+   * A bare alias ({@link aliases}) is the variable it names: a declared VAR_INPUT / VAR_OUTPUT is an input / output
+   * under both names (so an output reaches the scene under both), and any other variable binds by wiring under either.
+   */
+  bind(wired: WiredBindings): void {
+    const bound = boundNames(this.prog, this.aliases, wired)
+    this.#inputs = bound.inputs
+    this.#outputs = bound.outputs
+    this.#inPorts = this.#outPorts = null
+    this.#inCopy = null
+    this.#outCells = null
+    this.#outTable = null
+  }
+
+  /** The same compiled program (and so the same variables) with other bindings, for a caller that compiled it once already. */
+  withBindings(wired: WiredBindings): LocalPlcLink {
+    return new LocalPlcLink(this.prog, wired)
+  }
+
+  /**
+   * The compiled program put back as it was when compiled (CompiledProgram.restart), behind a new link with
+   * `wired`'s bindings: nothing this link held (its forces, its last outputs) goes with it. Null when the program
+   * cannot restart ({@link restartable}), and then nothing has changed. This link is not to be used after it.
+   */
+  get restartable(): boolean {
+    return this.prog.restart !== undefined
+  }
+  restarted(wired: WiredBindings): LocalPlcLink | null {
+    if (!this.prog.restart) return null
+    this.prog.restart()
+    return new LocalPlcLink(this.prog, wired)
+  }
+
+  /** What a scene may bind by wiring (CompiledProgram.bindable), each with its bare {@link aliases alias} when it has one. */
+  get bindable(): string[] {
+    return withAliases(this.prog.bindable, this.aliases)
+  }
+  get watch(): Readonly<Record<string, TagValue>> {
+    return this.prog.watch
+  }
+  /**
+   * The watch table with each bare {@link aliases alias} beside the variable it names, for a reader that looks values
+   * up by the scene's tag names (a project test's checks). The watch table itself keeps the program's own names: two
+   * rows for one variable would read as two variables.
+   */
+  get tagView(): Readonly<Record<string, TagValue>> {
+    const watch = this.prog.watch
+    if (this.aliases.size === 0) return watch
+    const out: Record<string, TagValue> = { ...watch }
+    for (const [bare, q] of this.aliases) {
+      const v = watch[q]
+      if (v !== undefined && !(bare in out)) out[bare] = v
+    }
+    return out
+  }
+  /** the program variable a scene tag name means: its alias's target, or the name itself */
+  #resolve(name: string): string {
+    return this.aliases.get(name) ?? name
+  }
+  get memory(): Readonly<Record<string, TagValue>> {
+    return this.prog.memory
+  }
+  /** Where {@link watch}'s values are in the program's memory (CompiledProgram.watchPlan), or null. */
+  watchPlan(): WatchPlan | null {
+    return this.prog.watchPlan?.() ?? null
+  }
+  // the names the program declares for a scene, as it spells them: the watch table has each under that spelling
+  #declared: Set<string> | null = null
+  declaredKind(name: string): ValueKind | undefined {
+    this.#declared ??= new Set([...this.prog.inputs, ...this.prog.outputs, ...this.prog.bindable])
+    return this.#declared.has(name) ? PLAIN_KIND[this.prog.varInfo(name)?.type ?? ''] : undefined
+  }
+  /** What a variable is, by its watch-table name (CompiledProgram.varInfo). */
+  varInfo(name: string): VarInfo | undefined {
+    return this.prog.varInfo(this.#resolve(name))
+  }
+  #memberTypes: Readonly<Record<string, string>> | null = null
+  /** The declared type of a value `varInfo` does not answer for: a function block's member (`C1.CV`), by its
+   *  watch-table name. Worked out for the whole program on first use. */
+  memberType(name: string): string | undefined {
+    return (this.#memberTypes ??= this.prog.memoryTypes)[this.#resolve(name)]
+  }
+  /**
+   * Write variables by name between scans, as an HMI or SCADA writes a PLC's tags: a Start button, a
+   * setpoint. The next scan reads them. A constant is left alone, and so is a name the program does not
+   * have; an input the scene feeds takes the scene's value again at the next scan, as it would on a PLC.
+   */
+  write(values: Readonly<Record<string, TagValue>>): void {
+    for (const [name, v] of Object.entries(values)) this.prog.setInput(this.#resolve(name), v)
+  }
+  get tasks(): readonly TaskInfo[] {
+    return this.prog.tasks
+  }
+
+  /** Write one variable between scans - a toggled bit. The next scan keeps it, or, if the
+   *  program drives that place, overwrites it, which is exactly what a toggle promises. */
+  force(name: string, value: TagValue): void {
+    this.prog.setInput(this.#resolve(name), value)
+  }
+
+  /**
+   * Hold variables at a value until released: the whole table, replacing the last one ({} releases them all). A held
+   * value is written before each scan, so the program reads it whatever the scene feeds, and again after the scan,
+   * so the output image and the next scan see it whatever the program wrote. Commissioning's force, as distinct from
+   * {@link force}'s one write. A name the program does not have is ignored, as {@link write} ignores it.
+   */
+  setForces(forces: Readonly<Record<string, TagValue>>): void {
+    this.#forces = Object.entries(forces).map(([tag, value]) => {
+      const name = this.#resolve(tag)
+      // a plain variable takes its port, as the inputs and outputs do; a struct path or one bit of a word (`Status.3`)
+      // goes by name, which only setInput walks
+      if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+        const port = this.prog.port(name)
+        return { set: (v: TagValue) => port.set(v), value }
+      }
+      return { set: (v: TagValue) => this.prog.setInput(name, v), value }
+    })
+    this.#applyForces()
+  }
+
+  #applyForces(): void {
+    for (const f of this.#forces) f.set(f.value)
+  }
+
+  /** `inputsRev`: a number the caller changes whenever `inputs` may hold other values than at its last call. With
+   *  the same number as that call, the inputs are not looked up again. Absent, they are on every call. */
+  step(inputs: Readonly<Record<string, TagValue>>, dt: number, inputsRev?: number): Record<string, TagValue> {
+    return this.cycle(inputs, () => this.prog.scan(dt), inputsRev)
+  }
+
+  stepTask(index: number, inputs: Readonly<Record<string, TagValue>>, dt: number, inputsRev?: number): Record<string, TagValue> {
+    return this.cycle(inputs, () => this.prog.scanTask(index, dt), inputsRev)
+  }
+
+  // Every scan stores every input it is given: the program, a force or a write may have changed the variable since
+  // the last scan. A step makes several scans on the same inputs (4.5 on a line of six tasks), and looking each up
+  // by name and storing it through its handle cost 118 ns an input, a scan. So an input's value is looked up once
+  // for the inputs a step brings, the number it is stored as is kept, and a scan stores the numbers.
+  #inCopy: InputCopy | null = null
+
+  /** Look `inputs` up: which are given a value, and the number each value is stored as, read back from a store
+   *  through its handle. */
+  #readInputs(c: InputCopy, inputs: Readonly<Record<string, TagValue>>): void {
+    const names = this.#inputs
+    const { given, seen, raw, ports } = c
+    for (let i = 0; i < names.length; i++) {
+      const v = inputs[names[i]!]
+      if (v === undefined) {
+        given[i] = 0
+        continue
+      }
+      // the same value as the one last looked up is stored as the same number
+      if (given[i] === 1 && Object.is(v, seen[i])) continue
+      given[i] = 1
+      seen[i] = v
+      if (!c.numbers) continue
+      const cell = ports[i]!.cell!
+      ports[i]!.set(v)
+      raw[i] = cell.cells[cell.index]!
+    }
+  }
+
+  /** Store every input that is given a value, as a scan finds them. */
+  #storeInputs(c: InputCopy): void {
+    const { given, seen, raw, ports } = c
+    if (!c.numbers) {
+      for (let i = 0; i < given.length; i++) if (given[i] === 1) ports[i]!.set(seen[i]!)
+      return
+    }
+    for (const run of c.runs) {
+      const { cells, at, of } = run
+      for (let k = 0; k < at.length; k++) if (given[of[k]!] === 1) cells[at[k]!] = raw[of[k]!]!
+    }
+  }
+
+  private cycle(inputs: Readonly<Record<string, TagValue>>, scan: () => void, inputsRev?: number): Record<string, TagValue> {
+    const names = this.#inputs
+    const inPorts = (this.#inPorts ??= names.map((n) => this.prog.port(this.#resolve(n))))
+    const c = (this.#inCopy ??= new InputCopy(inPorts))
+    if (inputsRev === undefined || inputsRev !== c.rev) {
+      c.rev = inputsRev ?? null
+      this.#readInputs(c, inputs)
+    }
+    this.#storeInputs(c)
+    if (this.#forces.length > 0) this.#applyForces()
+    scan()
+    if (this.#forces.length > 0) this.#applyForces()
+    return this.#outputTable()
+  }
+
+  // each output's value as of the last scan, and the table built from them
+  #outValues: (TagValue | undefined)[] = []
+  #outTable: Readonly<Record<string, TagValue>> | null = null
+  // The outputs as the numbers they are stored as (TagPort.cell), when every one is such a number: held against the
+  // numbers of the scan before, which says the table stands without reading a value through a handle (60 ns an
+  // output, a scan; 682 outputs and 4.5 scans a step on the line above). Null until they are worked out, false when
+  // an output is not a number.
+  #outCells: { runs: CellRun[]; raw: Float64Array } | false | null = null
+
+  /** Whether every output holds the number it held when the table was built. */
+  #outputsStand(o: { runs: CellRun[]; raw: Float64Array }): boolean {
+    const raw = o.raw
+    for (const run of o.runs) {
+      const { cells, at, of } = run
+      if (run.signed0) {
+        // 0 and -0 differ, and a NaN equals a NaN, as below
+        for (let k = 0; k < at.length; k++) {
+          const x = cells[at[k]!]!
+          const l = raw[of[k]!]!
+          if (x === l ? x === 0 && 1 / x !== 1 / l : x === x || l === l) return false
+        }
+      } else for (let k = 0; k < at.length; k++) if (cells[at[k]!] !== raw[of[k]!]) return false
+    }
+    return true
+  }
+
+  /**
+   * The output image after a scan. A line's outputs are the same as the scan before on nearly every scan (a 675-output
+   * program changed one on 2 steps in 1,000), and building a named table of them each time cost a quarter of the
+   * program's own scan. So each output is read and held against its last value, and the table is built again only
+   * when one differs. While none does, the same table is handed back: frozen, so a caller cannot write the copy the
+   * next scan returns. "Differs" is by the value itself: 0 and -0 differ, and a NaN equals a NaN.
+   */
+  #outputTable(): Record<string, TagValue> {
+    const outs = this.#outputs
+    const ports = (this.#outPorts ??= outs.map((n) => this.prog.port(this.#resolve(n))))
+    const o = (this.#outCells ??= ports.every((p) => p.cell !== undefined) && { runs: cellRuns(ports, () => true), raw: new Float64Array(ports.length).fill(NaN) })
+    if (o && this.#outTable !== null && this.#outputsStand(o)) return this.#outTable as Record<string, TagValue>
+    // a number changed, or none are held yet: the values, as before, and the numbers for the next scan
+    if (o) for (const run of o.runs) for (let k = 0; k < run.at.length; k++) o.raw[run.of[k]!] = run.cells[run.at[k]!]!
+    let last = this.#outValues
+    let same = this.#outTable !== null && last.length === ports.length
+    if (last.length !== ports.length) last = this.#outValues = new Array<TagValue | undefined>(ports.length).fill(undefined)
+    for (let i = 0; i < ports.length; i++) {
+      const v = ports[i]!.get()
+      const l = last[i]
+      if (v === l ? v === 0 && 1 / v !== 1 / (l as number) : v === v || l === l) {
+        same = false
+        last[i] = v
+      }
+    }
+    if (same) return this.#outTable as Record<string, TagValue>
+    const out: Record<string, TagValue> = {}
+    for (let i = 0; i < outs.length; i++) {
+      const v = last[i]
+      if (v !== undefined) out[outs[i]!] = v
+    }
+    this.#outTable = Object.freeze(out)
+    return out
+  }
+}
+
+/** Fetch a `.st` asset (e.g. a bundled exercise) and compile it into a link. */
+export async function loadProgram(url: string): Promise<LocalPlcLink> {
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`failed to load ST program '${url}' (${res.status})`)
+  return new LocalPlcLink(await res.text())
+}
