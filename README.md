@@ -25,7 +25,7 @@ El primer commit de este repositorio es ese código sin modificar; los cambios p
 | F0 | Fork, marca propia, publicación automática en GitHub Pages | hecho |
 | F1 | Tutor con Claude Code (pista / explicar / hacer), sin API de pago: ver [tutor/LEEME.md](tutor/LEEME.md) | hecho |
 | F2 | Misiones con juez automático y progreso: ver [misiones/](misiones/) y la página `/misiones/` | hecho (4 misiones) |
-| F3 | Temática de la fábrica | pendiente |
+| F3 | Temática: centro logístico (misiones 5 y 6: clasificación por color y por código de barras) | en curso |
 | F4 | Pulido | pendiente |
 
 ## Desarrollo local

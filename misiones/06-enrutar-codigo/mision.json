@@ -1,0 +1,12 @@
+{
+  "orden": 6,
+  "titulo": "Enrutar por código de barras",
+  "nivel": "Avanzado",
+  "objetivo": "Centro logístico, clasificación de salida: lee la etiqueta de cada caja y envíala a su muelle (A, B o recto) con dos empujadores, aunque haya varias cajas en la línea a la vez.",
+  "aprenderas": ["Lector de códigos (DINT y pulso de lectura)", "Registro de desplazamiento", "Por qué se procesa primero el tramo de aguas abajo", "Varios desvíos temporizados"],
+  "pistas": [
+    "Entre el lector y el empujador B puede haber dos cajas a la vez. Una sola variable con «el último código» no basta: cada tramo necesita la suya.",
+    "Cuando una caja llega a la fotocélula A, su código pasa de «tramo lector→A» a «tramo A→B» (salvo que se desvíe en A). Eso es un registro de desplazamiento.",
+    "Las fotocélulas A y B pueden activarse en el mismo ciclo. Trata B antes que A en el programa; si no, el código nuevo pisa al que necesita B."
+  ]
+}

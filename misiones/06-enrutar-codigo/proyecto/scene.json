@@ -1,0 +1,242 @@
+{
+  "version": 4,
+  "parts": [
+    {
+      "id": "box-spawner-1",
+      "type": "part",
+      "packageId": "oip.box-spawner",
+      "position": [
+        0.45,
+        1.25,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "boxesPerMinute": 20,
+        "boxColors": "#e8a33a,#3a8ee8,#f2f2f2",
+        "mixAttribute": "code",
+        "mixValues": "1,2,3",
+        "keepSpacing": true,
+        "conveyorId": "belt-conveyor-1",
+        "runTag": "Alimentador"
+      }
+    },
+    {
+      "id": "belt-conveyor-1",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        0.085,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            10,
+            0
+          ]
+        ],
+        "speed": 1,
+        "standHeight": 0.8,
+        "runTag": "CintaMarcha"
+      }
+    },
+    {
+      "id": "diffuse-sensor-1",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        4.63,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaA",
+        "maxRange": 1.564
+      }
+    },
+    {
+      "id": "diverter-1",
+      "type": "part",
+      "packageId": "oip.diverter",
+      "position": [
+        5,
+        0.6,
+        1.8755
+      ],
+      "rotationY": 0,
+      "params": {
+        "divertDistance": 1.5,
+        "tag": "DesviadorA"
+      }
+    },
+    {
+      "id": "diffuse-sensor-2",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        7.63,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaB",
+        "maxRange": 1.564
+      }
+    },
+    {
+      "id": "diverter-2",
+      "type": "part",
+      "packageId": "oip.diverter",
+      "position": [
+        8,
+        0.6,
+        1.8755
+      ],
+      "rotationY": 0,
+      "params": {
+        "divertDistance": 1.5,
+        "tag": "DesviadorB"
+      }
+    },
+    {
+      "id": "push-button-1",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.3,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "Marcha",
+        "text": "START",
+        "buttonColor": "#2e9e44"
+      },
+      "parent": "belt-conveyor-1"
+    },
+    {
+      "id": "push-button-2",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.55,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "Paro"
+      },
+      "parent": "belt-conveyor-1"
+    },
+    {
+      "id": "despawner-1",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        11.17,
+        0,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasRecto"
+      }
+    },
+    {
+      "id": "cinta-a",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        5.03,
+        0.8,
+        -0.857
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            2.5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaMarcha"
+      }
+    },
+    {
+      "id": "cinta-b",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        8.03,
+        0.8,
+        -0.857
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            2.5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaMarcha"
+      }
+    },
+    {
+      "id": "sumidero-a",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        5.03,
+        0,
+        -4.45
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasA"
+      }
+    },
+    {
+      "id": "sumidero-b",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        8.03,
+        0,
+        -4.45
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasB"
+      }
+    },
+    {
+      "id": "lector",
+      "type": "part",
+      "packageId": "oip.barcode-scanner",
+      "position": [
+        2.5,
+        0,
+        0
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "width": 1.8,
+        "readTag": "LecturaOk",
+        "codeTag": "CodigoDestino"
+      }
+    }
+  ]
+}

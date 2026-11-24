@@ -1,0 +1,22 @@
+{
+  "version": 7,
+  "name": "Misión 6 · Enrutar por código de barras",
+  "scene": "scene.json",
+  "packages": [
+    "parts/oip.box-spawner",
+    "parts/oip.box",
+    "parts/oip.belt-conveyor",
+    "parts/oip.diffuse-sensor",
+    "parts/oip.diverter",
+    "parts/oip.push-button",
+    "parts/oip.despawner",
+    "parts/oip.barcode-scanner"
+  ],
+  "program": [
+    "plc/program.st"
+  ],
+  "tests": [
+    "tests/01-enruta.test.json",
+    "tests/02-paro.test.json"
+  ]
+}
