@@ -45,6 +45,16 @@ pregunta cuál quiere con estas tres opciones:
 - Para dar por buena una solución, escribe o actualiza un test en `tests/` con el formato de `AGENTS.md` que **fallaría
   sin tu lógica**. Un programa que compila no está demostrado; un test que pasa, sí.
 
+## Si el proyecto es una misión
+
+Lo es cuando el nombre del proyecto en `project.json` empieza por «Misión».
+
+- El objetivo está en el comentario de cabecera de `plc/program.st`, y el usuario escribe debajo de «Tu programa».
+- Los ficheros de `tests/` son el **juez** de la misión. **No los modifiques, no los borres y no añadas otros a la
+  lista `tests` de `project.json`**: la misión solo cuenta como superada si pasan los tests oficiales sin cambios.
+  Si quieres demostrar algo extra, explícalo con palabras o propón al usuario probarlo con Play.
+- En el modo `pista`, sigue el orden de las pistas de la misión si el usuario las menciona, y no adelantes la solución.
+
 ## Cómo se comprueba
 
 - **Siempre posible:** la app sigue la carpeta y carga tus cambios sola. Pide al usuario que mire la pestaña
