@@ -1,0 +1,33 @@
+{
+  "name": "E2 · Un atasco en el control para toda la línea, la baliza lo indica y solo se rearranca con Rearme y Marcha",
+  "duration": 34,
+  "inputs": [
+    { "at": 1.0, "tag": "Marcha", "value": true },
+    { "at": 1.3, "tag": "Marcha", "value": false },
+    { "at": 19.0, "tag": "Rearme", "value": true },
+    { "at": 19.3, "tag": "Rearme", "value": false },
+    { "at": 19.5, "tag": "Marcha", "value": true },
+    { "at": 19.8, "tag": "Marcha", "value": false },
+    { "at": 27.0, "tag": "Rearme", "value": true },
+    { "at": 27.3, "tag": "Rearme", "value": false },
+    { "at": 27.5, "tag": "Marcha", "value": true },
+    { "at": 27.8, "tag": "Marcha", "value": false }
+  ],
+  "faults": [
+    { "at": 0, "until": 26, "kind": "jam", "zone": { "min": [11.0, 0.8, -0.7], "max": [11.6, 1.4, 0.7] } }
+  ],
+  "checks": [
+    { "at": 5.0, "tag": "AlarmaAtasco", "equals": false },
+    { "eventually": true, "until": 18.5, "tag": "AlarmaAtasco", "equals": true },
+    { "at": 18.5, "tag": "CintaRecepcion", "equals": false },
+    { "at": 18.5, "tag": "CintaControl", "equals": false },
+    { "at": 18.5, "tag": "Alimentador", "equals": false },
+    { "at": 18.5, "tag": "Baliza", "equals": 6 },
+    { "at": 20.5, "tag": "CintaControl", "equals": true },
+    { "eventually": true, "from": 21, "until": 25, "tag": "AlarmaAtasco", "equals": true },
+    { "at": 33.5, "tag": "AlarmaAtasco", "equals": false },
+    { "at": 33.5, "tag": "CintaControl", "equals": true },
+    { "at": 33.5, "tag": "CintaRecepcion", "equals": true },
+    { "at": 33.5, "tag": "Baliza", "equals": 1 }
+  ]
+}

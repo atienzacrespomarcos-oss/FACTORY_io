@@ -1,0 +1,33 @@
+{
+  "orden": 7,
+  "titulo": "Turno completo",
+  "encargo": "La planta ya hace todo el recorrido. Ahora tiene que aguantar un turno: un modo manual para sacar palés a mano, un fin de turno que vacía la línea y la para sola, una supervisión que detecta un palé que no llega al muelle y los indicadores del turno (disponibilidad y cajas por hora).",
+  "objetivos": [
+    {
+      "etiqueta": "Turnos terminados con la línea vacía",
+      "tag": "TurnosTerminados",
+      "meta": 1
+    },
+    {
+      "etiqueta": "Cajas por hora",
+      "tag": "CajasPorHora",
+      "meta": 240
+    }
+  ],
+  "aprenderas": [
+    "Modos de marcha: manual y automático",
+    "Parada ordenada: vaciar la línea antes de parar",
+    "Supervisión de movimientos por tiempo (watchdog)",
+    "Indicadores con REAL y conversiones (DINT_TO_REAL)",
+    "Un generador de pulsos con un TON"
+  ],
+  "pistas": [
+    "Un pulso cada segundo: Segundo(IN := NOT Segundo.Q, PT := T#1s); y con IF Segundo.Q THEN sumas 1. Con T#500ms y una variable que cambias en cada pulso tienes el parpadeo.",
+    "El modo manual entra en la memoria de marcha: ... AND NOT ModoManual. Para que la línea se pare al acabar el vaciado, añade también una condición de «vaciado terminado».",
+    "Al final del programa, IF ModoManual THEN RodillosPale := ...; END_IF; manda sobre lo que hayan escrito las secuencias, porque es la última asignación del ciclo.",
+    "Para dividir, convierte a REAL: 100.0 * DINT_TO_REAL(TiempoMarcha) / DINT_TO_REAL(TiempoMarcha + TiempoAlarma), y solo si el divisor es mayor que 0."
+  ],
+  "retira": [],
+  "ajustes": [],
+  "flujoAnterior": []
+}

@@ -1,0 +1,44 @@
+{
+  "version": 7,
+  "name": "Fábrica viva",
+  "scene": "scene.json",
+  "packages": [
+    "parts/oip.box-spawner",
+    "parts/oip.box",
+    "parts/oip.belt-conveyor",
+    "parts/oip.diffuse-sensor",
+    "parts/oip.push-button",
+    "parts/oip.despawner",
+    "parts/oip.stack-light",
+    "parts/oip.diverter",
+    "parts/oip.barcode-scanner",
+    "parts/oip.roller-conveyor",
+    "parts/oip.blade-stop",
+    "parts/oip.pallet-dispenser",
+    "parts/oip.pallet",
+    "parts/oip.six-axis-robot",
+    "parts/oip.stretch-wrapper",
+    "parts/oip.light-curtain"
+  ],
+  "program": [
+    "plc/program.st"
+  ],
+  "tests": [
+    "tests/e1-01-marcha-paro.test.json",
+    "tests/e1-02-seta.test.json",
+    "tests/e2-01-rechazo.test.json",
+    "tests/e2-02-atasco.test.json",
+    "tests/e2-03-bloque.test.json",
+    "tests/e3-01-clasificacion.test.json",
+    "tests/e3-02-paro-en-transito.test.json",
+    "tests/e4-01-pulmon.test.json",
+    "tests/e5-01-paletizado.test.json",
+    "tests/e5-02-paro-robot.test.json",
+    "tests/e6-01-expedicion.test.json",
+    "tests/e6-02-cortina.test.json",
+    "tests/e6-03-muting-falso.test.json",
+    "tests/e7-01-fin-turno.test.json",
+    "tests/e7-02-manual.test.json",
+    "tests/e7-03-averia-transporte.test.json"
+  ]
+}

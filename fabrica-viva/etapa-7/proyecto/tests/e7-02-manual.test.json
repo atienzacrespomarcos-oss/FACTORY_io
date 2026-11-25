@@ -1,0 +1,131 @@
+{
+  "name": "E7 · En manual la línea no arranca, la baliza parpadea en ámbar y AVANCE mueve 2 s los rodillos de palés",
+  "duration": 70,
+  "inputs": [
+    {
+      "at": 1.0,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 1.3,
+      "tag": "Marcha",
+      "value": false
+    },
+    {
+      "at": 30.0,
+      "tag": "ModoManual",
+      "value": true
+    },
+    {
+      "at": 35,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 35.3,
+      "tag": "Marcha",
+      "value": false
+    },
+    {
+      "at": 40,
+      "tag": "AvanceManual",
+      "value": true
+    },
+    {
+      "at": 40.3,
+      "tag": "AvanceManual",
+      "value": false
+    },
+    {
+      "at": 50.0,
+      "tag": "ModoManual",
+      "value": false
+    },
+    {
+      "at": 52,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 52.3,
+      "tag": "Marcha",
+      "value": false
+    }
+  ],
+  "checks": [
+    {
+      "always": true,
+      "from": 30.2,
+      "until": 51.9,
+      "tag": "EnMarcha",
+      "equals": false
+    },
+    {
+      "at": 45,
+      "tag": "EstadoLinea",
+      "equals": 4
+    },
+    {
+      "eventually": true,
+      "from": 30.2,
+      "until": 32,
+      "tag": "Baliza",
+      "equals": 2
+    },
+    {
+      "eventually": true,
+      "from": 30.2,
+      "until": 32,
+      "tag": "Baliza",
+      "equals": 0
+    },
+    {
+      "always": true,
+      "from": 30.2,
+      "until": 39.9,
+      "tag": "RodillosExpedicion",
+      "equals": false
+    },
+    {
+      "eventually": true,
+      "from": 40,
+      "until": 41,
+      "tag": "RodillosExpedicion",
+      "equals": true
+    },
+    {
+      "always": true,
+      "from": 42.5,
+      "until": 50,
+      "tag": "RodillosExpedicion",
+      "equals": false
+    },
+    {
+      "eventually": true,
+      "from": 52.3,
+      "tag": "EnMarcha",
+      "equals": true
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              -1,
+              -1,
+              -6
+            ],
+            "max": [
+              50,
+              0.45,
+              6
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
