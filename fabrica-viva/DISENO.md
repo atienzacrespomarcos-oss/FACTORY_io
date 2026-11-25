@@ -17,15 +17,15 @@ con una zona nueva que se suma a lo que ya construiste y programaste.
 
 ## Progresión
 
-| # | Ampliación | Equipos nuevos | Forma de programar que exige | Encargo en directo (ejemplo) |
+| # | Ampliación | Equipos nuevos | Forma de programar que exige | Encargo en directo |
 |---|---|---|---|---|
-| 1 | Recepción desde el muelle | Camión en muelle, cintas, seta de emergencia, baliza | Un programa: enclavamientos, señales normalmente cerradas, salida de baliza por bits | Descargar 30 cajas; la seta lo para todo y la baliza lo indica |
-| 2 | Control de entrada | Lector de códigos, fotocélula, desvío de rechazo | **Bloque de función** propio (una cinta = una instancia) y atascos con TON | 40 cajas controladas sin rechazos erróneos |
-| 3 | Clasificación | Desvíos a dos líneas (pedidos y devoluciones) | **Arrays**: el registro de desplazamiento pasa a una cola de códigos | Clasificar 60 cajas sin errores de destino |
-| 4 | Pulmón y lotes | Rodillos de acumulación, topes | **Máquina de estados** con CASE y **tipos propios** (STRUCT) para alarmas | Entregar 10 lotes completos |
-| 5 | Paletizado | Robot de 6 ejes, dispensador de palés | **Intercambio de señales** con otra máquina (orden, ejecutar, terminado) y secuencias | Montar 3 palés completos |
-| 6 | Enfardado y expedición | Enfardadora, transferencia, AGV, barrera de seguridad | **Varios programas y tareas** (CONFIGURATION) y enclavamientos de seguridad | Expedir 2 palés al muelle sin incidentes |
-| 7 | Turno completo | Toda la planta | Modos manual/automático, recuperación de averías, indicadores de producción | Un turno con averías aleatorias y un ritmo mínimo |
+| 1 | Recepción | Camión en el muelle, cintas, fotocélula, Marcha, Paro, seta, baliza | Memoria de marcha, señales normalmente cerradas, baliza por bits | 30 cajas recibidas |
+| 2 | Control de entrada | Cinta de control, lector de códigos, empujador de rechazo, Rearme | **Bloque de función** propio (`FB_Cinta`, una instancia por cinta), atasco con TON y rearme | 30 cajas etiquetadas al final, 10 rechazadas |
+| 3 | Clasificación | Dos empujadores y dos cintas laterales (exprés y devoluciones) | **ARRAY y FOR**: una cola FIFO de códigos en un bloque (`FB_Cola`), orden de las instrucciones en el ciclo | 8 exprés, 8 devoluciones, 15 normales |
+| 4 | Pulmón | Rodillos de acumulación, tope, cuatro fotocélulas, cinta de salida | **Máquina de estados** con CASE (`FB_Pulmon`), ritmo mínimo, histéresis de «lleno» que frena la descarga | 10 cajas entregadas al paletizado |
+| 5 | Paletizado con robot | Robot de 6 ejes, dispensador de palés europeos, rodillos y tope de palés | **Intercambio de señales** (trabajo, ejecutar, listo) con el robot (`FB_Paletizado`) y una segunda secuencia para los palés | 16 cajas paletizadas, 2 palés |
+| 6 | Enfardado y expedición | Enfardadora, rodillos hasta el muelle, cortina de seguridad con dos sensores de muting | **Seguridad**: muting por secuencia (`FB_Muting`), alarma enclavada con rearme, filtrar un sensor que parpadea (TOF) | 2 palés expedidos |
+| 7 | Turno completo | Selector MANUAL, AVANCE, FIN TURNO | **Modos de marcha**, parada ordenada (vaciado), supervisión por tiempo (watchdog), indicadores con REAL | 1 turno terminado, 240 cajas por hora |
 
 Las zonas se reparten por la nave siguiendo el flujo: muelle de recepción → control → clasificación → pulmón →
 paletizado → enfardado → muelle de expedición.
@@ -48,8 +48,24 @@ paletizado → enfardado → muelle de expedición.
 4. Se juega entera desde la interfaz (ampliar, programar, Play, encargo en directo, juez), sin atajos internos.
 5. Se revisa a ojo la escena (encuadre, piezas bien montadas, sin elementos flotando).
 
-## Riesgos conocidos
+## Decisiones de diseño
 
-- **Robot (etapa 5):** sus trayectorias se calcularán con la cinemática inversa del propio proyecto
-  (`src/core/robot/robotIk.ts`). Si no resultan fiables, se sustituirá por el pórtico de pick & place, y se dirá.
-- **Rendimiento:** una planta grande tiene muchas piezas. Se medirá en cada etapa.
+- **El robot** se enseña por coordenadas con la cinemática inversa del propio proyecto (`scripts/robot-pose.mjs`, que
+  usa la herramienta `solve_robot_pose` de la app). Sus trabajos ya vienen enseñados: el jugador programa el
+  intercambio de señales, no las trayectorias.
+- **Palé europeo** (1200 × 800 mm) con cajas de 600 × 400 mm: dos capas de 2 × 2 cajas ocupan el palé justo.
+- **Muting** de dos sensores en secuencia antes de la cortina; el muting termina cuando la carga ha pasado (sensores
+  libres y cortina despejada) y tiene un tiempo máximo. Es un modelo didáctico, no un diseño de seguridad certificable.
+- **Disponibilidad** (etapa 7) según la idea de ISO 22400-2 (tiempo produciendo entre tiempo que se debía producir);
+  aquí el tiempo que se debía producir es el de marcha más el perdido en alarma.
+- **Pruebas que dependen de piezas retiradas.** Cuando una ampliación retira un sumidero que una prueba anterior
+  contaba, esa prueba se adapta en la etapa nueva y se lista en `flujoAnterior` del `etapa.json`: el validador la
+  exige con la solución, no con la zona nueva sin programar.
+- **Orden de las piezas.** La escena de cada etapa tiene el orden de piezas que deja la ampliación en la app
+  (`scripts/encadenar-fabrica-viva.mjs`; `npm run check-fabrica-viva` lo comprueba antes de validar). El orden decide
+  el de los cuerpos de la física, así que el validador simula la misma planta que recibe quien juega.
+- **Cinta de salida del pulmón.** Arranca 0,4 s después de bajar el tope. Además de no arrastrar la caja contra el
+  tope que se retira, evita un caso del motor de física: una caja que se ha quedado quieta contra el tope sobre una
+  cinta en marcha no vuelve a moverse al bajar el tope si la cinta no arranca de nuevo.
+- **Ambientación** (estanterías con cargas, zona de almacén, barandilla, bolardos) va en la etapa 1 con ids `fv1-deco-*`,
+  fuera de las zonas que vigilan las pruebas. Una planta guardada antes de añadirla la recibe al ampliar.

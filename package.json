@@ -51,7 +51,7 @@
     "shot-part": "node scripts/shot-part.mjs",
     "capabilities": "node scripts/capabilities.mjs",
     "check-misiones": "node scripts/check-misiones.mjs",
-    "check-fabrica-viva": "node scripts/check-fabrica-viva.mjs",
+    "check-fabrica-viva": "node scripts/encadenar-fabrica-viva.mjs --check && node scripts/check-fabrica-viva.mjs",
     "build-misiones": "node scripts/build-misiones.mjs",
     "check-wiring": "node scripts/check-wiring.mjs",
     "check-layout": "node scripts/check-layout.mjs",

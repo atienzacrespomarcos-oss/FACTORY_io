@@ -16,7 +16,7 @@
     "Leer el estado de una instancia (Pulmon.Estado)"
   ],
   "pistas": [
-    "En el estado 1 (liberando), TopePulmon abajo y rodillos parados: la caja del tope ya está sobre la cinta de salida y se va sola; la siguiente se queda quieta sobre los rodillos.",
+    "En el estado 1 (liberando), TopePulmon abajo y rodillos parados: la caja del tope ya está sobre la cinta de salida y se va sola; la siguiente se queda quieta sobre los rodillos. La cinta de salida (Salida) arranca 0,4 s después de bajar el tope, cuando ya ha bajado del todo.",
     "El ritmo: un TON con IN := Pulmon.Estado = 0 y PT := T#10s. Su salida Q es el Permiso.",
     "Llama a los temporizadores siempre, fuera de los IF y del CASE: un TON que no se llama en un scan no ve caer su entrada.",
     "PulmonLleno con dos TON, uno sobre la fotocélula tapada (2 s) y otro sobre libre (3 s): el primero lo pone a TRUE y el segundo a FALSE. Luego Alimentador := EnMarcha AND NOT PulmonLleno."

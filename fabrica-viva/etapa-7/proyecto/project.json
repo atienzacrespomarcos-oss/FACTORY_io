@@ -18,7 +18,12 @@
     "parts/oip.pallet",
     "parts/oip.six-axis-robot",
     "parts/oip.stretch-wrapper",
-    "parts/oip.light-curtain"
+    "parts/oip.light-curtain",
+    "parts/oip.floor-marking",
+    "parts/oip.rack",
+    "parts/oip.guard-rail",
+    "parts/oip.bollards",
+    "parts/oip.unit-load"
   ],
   "program": [
     "plc/program.st"

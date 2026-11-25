@@ -13,7 +13,13 @@
     "parts/oip.diverter",
     "parts/oip.barcode-scanner",
     "parts/oip.roller-conveyor",
-    "parts/oip.blade-stop"
+    "parts/oip.blade-stop",
+    "parts/oip.floor-marking",
+    "parts/oip.rack",
+    "parts/oip.guard-rail",
+    "parts/oip.bollards",
+    "parts/oip.unit-load",
+    "parts/oip.pallet"
   ],
   "program": [
     "plc/program.st"

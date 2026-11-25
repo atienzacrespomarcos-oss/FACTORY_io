@@ -5,7 +5,9 @@
    - Estado 1, liberando: tope abajo y rodillos PARADOS, hasta que la caja deja la fotocélula del tope;
      entonces suma 1 a Liberadas y pasa a 2. La caja del tope ya está en la cinta de salida y se va;
      la siguiente, sobre los rodillos parados, se queda: así sale una sola.
-   - Estado 2, cerrando: tope arriba y rodillos parados durante 0,5 s; luego vuelve a 0. *)
+   - Estado 2, cerrando: tope arriba y rodillos parados durante 0,5 s; luego vuelve a 0.
+   Salida (la cinta de salida): en marcha con Habilitar, salvo los primeros 0,4 s del estado 1, mientras
+   el tope baja: así la cinta no arrastra la caja contra el tope que se está retirando. *)
 FUNCTION_BLOCK FB_Pulmon
 VAR_INPUT
   Habilitar : BOOL;    (* la línea está en marcha *)
@@ -15,6 +17,7 @@ END_VAR
 VAR_OUTPUT
   Tope : BOOL;         (* TRUE: tope arriba, retiene *)
   Avance : BOOL;       (* TRUE: rodillos del pulmón en marcha *)
+  Salida : BOOL;       (* TRUE: cinta de salida en marcha *)
   Estado : INT;        (* 0 esperando, 1 liberando, 2 cerrando *)
   Liberadas : INT;     (* cajas soltadas *)
 END_VAR

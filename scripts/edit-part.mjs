@@ -34,7 +34,7 @@ const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const argv = process.argv.slice(2)
 const usage = (why) => {
   if (why) console.error(`✗ ${why}`)
-  console.error('usage: npm run edit-part -- <project-folder> <partId> [--params k=v,...] [--at x,y,z] [--rot <deg>] [--name <text>] [--visible true|false] [--remove] [--docks]')
+  console.error('usage: npm run edit-part -- <project-folder> <partId> [--params k=v,...] [--at x,y,z] [--rot <deg>] [--name <text>] [--visible true|false] [--locked true|false] [--remove] [--docks]')
   process.exit(2)
 }
 const positional = []
@@ -48,6 +48,11 @@ for (let i = 0; i < argv.length; i++) {
     const v = argv[++i]
     if (v !== 'true' && v !== 'false') usage(`--visible wants true or false, not "${v}"`)
     o.visible = v === 'true'
+  } else if (a === '--locked') {
+    // Fábrica PLC: lock or unlock a part against edits in the viewport (scenery, as a warehouse's racks)
+    const v = argv[++i]
+    if (v !== 'true' && v !== 'false') usage(`--locked wants true or false, not "${v}"`)
+    o.locked = v === 'true'
   } else if (a === '--params' || a === '--at' || a === '--rot' || a === '--name') {
     const v = argv[++i]
     if (v === undefined) usage(`${a} wants a value`)
@@ -68,7 +73,7 @@ for (let i = 0; i < argv.length; i++) {
 const [folder, partId, ...extra] = positional
 if (!folder || !partId) usage()
 if (extra.length) usage(`one part at a time (got ${[partId, ...extra].join(', ')})`)
-const edits = o.params !== undefined || o.at !== undefined || o.rot !== undefined || o.name !== undefined || o.visible !== undefined || o.remove === true
+const edits = o.params !== undefined || o.at !== undefined || o.rot !== undefined || o.name !== undefined || o.visible !== undefined || o.locked !== undefined || o.remove === true
 if (!edits && !o.docks) usage('nothing to change: give --params, --at, --rot or --name (or --docks to list a building\'s dock doors)')
 
 const r6 = (n) => Math.round(n * 1e6) / 1e6
@@ -185,6 +190,13 @@ try {
     if (o.visible) delete target.visible
     else target.visible = false
     lines.push(`  visible: ${was} -> ${o.visible}`)
+  }
+  if (o.locked !== undefined) {
+    const target = scene.parts.find((p) => p.id === partId)
+    const was = target.locked === true
+    if (o.locked) target.locked = true
+    else delete target.locked
+    lines.push(`  locked: ${was} -> ${o.locked}`)
   }
   if (o.name !== undefined) {
     const target = scene.parts.find((p) => p.id === partId)

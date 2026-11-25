@@ -201,6 +201,271 @@
       "name": "Baliza"
     },
     {
+      "id": "fv1-deco-zona-almacen",
+      "type": "part",
+      "packageId": "oip.floor-marking",
+      "position": [
+        17,
+        0,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "length": 26,
+        "width": 6.4,
+        "style": "border",
+        "borderWidth": 0.15
+      },
+      "name": "Zona de almacén",
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-estanteria-1",
+      "type": "part",
+      "packageId": "oip.rack",
+      "position": [
+        8,
+        0,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "numShelves": 3,
+        "aisle": "A"
+      },
+      "name": "Estantería A",
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-estanteria-2",
+      "type": "part",
+      "packageId": "oip.rack",
+      "position": [
+        14,
+        0,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "numShelves": 3,
+        "aisle": "B"
+      },
+      "name": "Estantería B",
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-estanteria-3",
+      "type": "part",
+      "packageId": "oip.rack",
+      "position": [
+        20,
+        0,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "numShelves": 3,
+        "aisle": "C"
+      },
+      "name": "Estantería C",
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-estanteria-4",
+      "type": "part",
+      "packageId": "oip.rack",
+      "position": [
+        26,
+        0,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "numShelves": 3,
+        "aisle": "D"
+      },
+      "name": "Estantería D",
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-barandilla",
+      "type": "part",
+      "packageId": "oip.guard-rail",
+      "position": [
+        17,
+        0,
+        2.3
+      ],
+      "rotationY": 0,
+      "params": {
+        "length": 32
+      },
+      "name": "Barandilla del pasillo",
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-bolardos-1",
+      "type": "part",
+      "packageId": "oip.bollards",
+      "position": [
+        47.6,
+        0,
+        1.2
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "count": 2
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-bolardos-2",
+      "type": "part",
+      "packageId": "oip.bollards",
+      "position": [
+        47.6,
+        0,
+        3.4
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "count": 2
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-carga-1-1",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        6.65,
+        1.63,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "wrapped": true,
+        "loadId": "L-0101"
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-carga-1-2",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        9.35,
+        3.23,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "loadId": "L-0102",
+        "courses": 2,
+        "caseColor": "#c8a06a"
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-carga-2-1",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        15.35,
+        1.63,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "wrapped": true,
+        "loadId": "L-0201"
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-carga-2-2",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        12.65,
+        3.23,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "loadId": "L-0202",
+        "courses": 2,
+        "caseColor": "#c8a06a"
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-carga-3-1",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        18.65,
+        1.63,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "wrapped": true,
+        "loadId": "L-0301"
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-carga-3-2",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        21.35,
+        3.23,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "loadId": "L-0302",
+        "courses": 2,
+        "caseColor": "#c8a06a"
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-carga-4-1",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        27.35,
+        1.63,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "wrapped": true,
+        "loadId": "L-0401"
+      },
+      "locked": true
+    },
+    {
+      "id": "fv1-deco-carga-4-2",
+      "type": "part",
+      "packageId": "oip.unit-load",
+      "position": [
+        24.65,
+        3.23,
+        10.2
+      ],
+      "rotationY": 0,
+      "params": {
+        "loadId": "L-0402",
+        "courses": 2,
+        "caseColor": "#c8a06a"
+      },
+      "locked": true
+    },
+    {
       "id": "fv2-cinta-control",
       "type": "part",
       "packageId": "oip.belt-conveyor",

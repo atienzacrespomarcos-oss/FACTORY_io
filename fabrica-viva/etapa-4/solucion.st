@@ -41,11 +41,13 @@ END_VAR
 VAR_OUTPUT
   Tope : BOOL;
   Avance : BOOL;
+  Salida : BOOL;
   Estado : INT;
   Liberadas : INT;
 END_VAR
 VAR
   Cerrando : TON;
+  Bajando : TON;
 END_VAR
 
 CASE Estado OF
@@ -65,8 +67,11 @@ CASE Estado OF
 END_CASE;
 (* el temporizador se llama fuera del CASE: así ve siempre su entrada *)
 Cerrando(IN := Estado = 2, PT := T#500ms);
+Bajando(IN := Estado = 1, PT := T#400ms);
 Tope := Estado <> 1;
 Avance := Habilitar AND Estado = 0;
+(* la cinta de salida espera a que el tope haya bajado del todo antes de llevarse la caja *)
+Salida := Habilitar AND NOT (Estado = 1 AND NOT Bajando.Q);
 END_FUNCTION_BLOCK
 
 FUNCTION_BLOCK FB_Cinta
@@ -242,7 +247,7 @@ EmpujeB(IN := RetardoB.Q, PT := T#600ms);
 DesvioDevol := EmpujeB.Q AND EnMarcha;
 
 (* Etapa 4: el pulmón suelta una caja cada 10 s como mucho, y retiene la descarga si se llena. *)
-CintaSalidaPulmon := EnMarcha;
+CintaSalidaPulmon := Pulmon.Salida;
 Ritmo(IN := Pulmon.Estado = 0, PT := T#10s);
 Pulmon(Habilitar := EnMarcha, CajaEnTope := FotocelulaTope, Permiso := Ritmo.Q);
 TopePulmon := Pulmon.Tope;

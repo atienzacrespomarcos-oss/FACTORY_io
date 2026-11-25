@@ -23,7 +23,7 @@
   "pistas": [
     "El robot ya tiene sus trabajos enseñados: el 1 recoge y el 2 + Colocadas deja la caja en su hueco. Tú solo eliges el número y das la orden.",
     "Si pulsas Ejecutar un solo ciclo, el robot puede no verlo: mantenlo a TRUE hasta que RobotListo caiga, y entonces espera a que vuelva a TRUE.",
-    "La cinta de salida: CintaSalidaPulmon := EnMarcha AND NOT FotocelulaPicking. En el pulmón conviene Permiso := Ritmo.Q AND NOT FotocelulaPicking, para no bajar el tope con la cinta parada.",
+    "La cinta de salida: CintaSalidaPulmon := Pulmon.Salida AND NOT FotocelulaPicking. En el pulmón conviene Permiso := Ritmo.Q AND NOT FotocelulaPicking, para no bajar el tope con la cinta parada.",
     "Palés: un CASE PasoPale con 0 pedir, 1 DarPale hasta que DispensadorOcupado suba, 2 esperar a que baje, 3 rodillos hasta que PalePresente lleve 2 s, 4 cargar (PaleListo para el robot), 5 tope abajo y rodillos hasta que PalePresente lleve 3 s libre."
   ],
   "retira": [

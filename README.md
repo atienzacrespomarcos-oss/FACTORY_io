@@ -24,8 +24,8 @@ El primer commit de este repositorio es ese código sin modificar; los cambios p
 |---|---|---|
 | F0 | Fork, marca propia, publicación automática en GitHub Pages | hecho |
 | F1 | Tutor con Claude Code (pista / explicar / hacer), sin API de pago: ver [tutor/LEEME.md](tutor/LEEME.md) | hecho |
-| F2 | Misiones con juez automático y progreso: ver [misiones/](misiones/) y la página `/misiones/` | hecho (4 misiones) |
-| F3 | Temática: centro logístico. Fábrica viva (planta que crece por etapas) + Academia (7 ejercicios sueltos) | en curso: etapas 1 y 2 |
+| F2 | Misiones con juez automático y progreso: ver [misiones/](misiones/) y la página `/misiones/` | hecho |
+| F3 | Temática: centro logístico. Fábrica viva (planta que crece en 7 etapas, de la recepción al turno completo) + Academia (7 ejercicios sueltos) | hecho |
 | F4 | Pulido | pendiente |
 
 ## Desarrollo local
@@ -59,7 +59,8 @@ El modo principal: una única planta, la tuya, que crece. Diseño y progresión 
 - `fabrica-viva/etapa-<N>/`: la planta acumulada hasta esa etapa (`proyecto/`), la solución de referencia,
   el fragmento de programa que se añade al ampliar (`fragmento-*.st`) y la ficha (`etapa.json`: encargo,
   objetivos en directo, pistas, piezas que retira y parámetros que ajusta).
-- `npm run check-fabrica-viva` comprueba cada etapa: la solución pasa todo; la solución de la etapa anterior
+- `npm run check-fabrica-viva` comprueba que cada escena tiene el orden de piezas de la ampliación
+  (`scripts/encadenar-fabrica-viva.mjs` lo arregla) y después cada etapa: la solución pasa todo; la solución de la etapa anterior
   más el fragmento nuevo (unidos con la misma función que la app) compila, mantiene las pruebas anteriores y
   falla las nuevas; y ampliar la planta anterior da exactamente la planta de la etapa.
 - En la app: `/app/?fabrica=viva` abre tu fábrica; el panel de encargos lee los objetivos en directo, el juez
