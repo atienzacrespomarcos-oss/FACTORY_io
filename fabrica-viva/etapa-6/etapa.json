@@ -1,0 +1,42 @@
+{
+  "orden": 6,
+  "titulo": "Enfardado y expedición",
+  "encargo": "Los palés llenos tienen que salir enfardados hacia el camión. Añade una enfardadora y unos rodillos hasta el muelle de expedición. El muelle tiene una cortina de seguridad: los palés deben pasar con muting, pero si una persona la cruza, la línea se para hasta que se rearme.",
+  "objetivos": [
+    {
+      "etiqueta": "Palés expedidos",
+      "tag": "PalesExpedidos",
+      "meta": 2
+    }
+  ],
+  "aprenderas": [
+    "Seguridad: cortina fotoeléctrica y muting por secuencia de sensores",
+    "Alarmas con enclavamiento y rearme",
+    "Filtrar una señal que parpadea (TOF)",
+    "Otro intercambio de señales: orden, ocupado y hecho"
+  ],
+  "pistas": [
+    "El muting: un R_TRIG sobre SensorB; si su Q llega con SensorA a TRUE, Activo := TRUE. Activo vuelve a FALSE con A y B libres y la cortina libre, o con un TON de 30 s.",
+    "La alarma se enclava como el atasco: IF NOT Muting.ZonaSegura THEN AlarmaCortina := TRUE; ELSIF Rearme THEN AlarmaCortina := FALSE; END_IF;",
+    "Enfardar se da como la orden del robot: mantenla a TRUE hasta que EnfardadoraOcupada suba. Mientras esté ocupada, rodillos parados.",
+    "Para contar palés: un TOF con IN := PaleEnMuelle y PT := T#1s, y un F_TRIG sobre su Q."
+  ],
+  "retira": [
+    "fv5-sumidero-pales"
+  ],
+  "ajustes": [
+    {
+      "id": "bld_1",
+      "params": {
+        "openDoors": [
+          "11:0",
+          "15:0"
+        ]
+      }
+    }
+  ],
+  "flujoAnterior": [
+    "e5-01-paletizado.test.json",
+    "e5-02-paro-robot.test.json"
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "name": "E6 · Si alguien cruza la cortina sin palé, la línea se para y no arranca hasta Rearme y Marcha",
+  "duration": 90,
+  "inputs": [
+    {
+      "at": 1.0,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 1.3,
+      "tag": "Marcha",
+      "value": false
+    },
+    {
+      "at": 66.0,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 66.3,
+      "tag": "Marcha",
+      "value": false
+    },
+    {
+      "at": 70.0,
+      "tag": "Rearme",
+      "value": true
+    },
+    {
+      "at": 70.3,
+      "tag": "Rearme",
+      "value": false
+    },
+    {
+      "at": 73.0,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 73.3,
+      "tag": "Marcha",
+      "value": false
+    }
+  ],
+  "faults": [
+    {
+      "at": 60,
+      "until": 61,
+      "part": "fv6-cortina",
+      "kind": "sensorStuck",
+      "value": false
+    }
+  ],
+  "checks": [
+    {
+      "always": true,
+      "from": 5,
+      "until": 59.9,
+      "tag": "EnMarcha",
+      "equals": true
+    },
+    {
+      "eventually": true,
+      "from": 60,
+      "until": 60.5,
+      "tag": "AlarmaCortina",
+      "equals": true
+    },
+    {
+      "always": true,
+      "from": 60.2,
+      "until": 72.9,
+      "tag": "EnMarcha",
+      "equals": false
+    },
+    {
+      "always": true,
+      "from": 60.2,
+      "until": 72.9,
+      "tag": "RodillosExpedicion",
+      "equals": false
+    },
+    {
+      "at": 65,
+      "tag": "Baliza",
+      "equals": 4
+    },
+    {
+      "always": true,
+      "from": 70.5,
+      "until": 72.9,
+      "tag": "AlarmaCortina",
+      "equals": false
+    },
+    {
+      "eventually": true,
+      "from": 73.3,
+      "tag": "EnMarcha",
+      "equals": true
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              -1,
+              -1,
+              -6
+            ],
+            "max": [
+              50,
+              0.45,
+              6
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
