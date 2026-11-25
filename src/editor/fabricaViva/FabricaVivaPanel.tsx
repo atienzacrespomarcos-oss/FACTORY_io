@@ -17,6 +17,7 @@ import {
   EVENTO_PROGRESO,
   leerProgreso,
   objetivosCumplidos,
+  tomarCamaraPendiente,
 } from './fabricaViva'
 import type { Etapa, Progreso } from './fabricaViva'
 import './fabricaViva.css'
@@ -61,6 +62,15 @@ export function FabricaVivaPanel({ store, state, controller }: Props): ReactElem
   const n = etapaDePlanta(state.scene.parts)
   const etapa = etapas?.find((e) => e.orden === n)
   const siguiente = etapas?.find((e) => e.orden === n + 1)
+
+  // tras ampliar, la página se recarga: la cámara va a la zona nueva que dejó apuntada ampliarFabrica
+  useEffect(() => {
+    if (!controller) return
+    const pose = tomarCamaraPendiente()
+    if (!pose) return
+    const id = window.setTimeout(() => controller.view.setCameraPose(pose), 1000)
+    return () => window.clearTimeout(id)
+  }, [controller])
 
   useEffect(() => {
     let vivo = true
@@ -121,6 +131,7 @@ export function FabricaVivaPanel({ store, state, controller }: Props): ReactElem
     try {
       const motivo = await ampliarFabrica(store, siguiente)
       if (motivo) alert(t(M.errorAmpliar, { motivo }))
+
     } catch (e) {
       alert(t(M.errorAmpliar, { motivo: e instanceof Error ? e.message : String(e) }))
     } finally {

@@ -9,6 +9,7 @@
 
 import { oipBytesToProject } from '../../core/project/projectArchive'
 import type { ProjectJSON } from '../../core/project/project'
+import { viewOfParts } from '../controller/camera'
 import { bakePart } from '../parts/bakePart'
 import { currentDocumentId, fileOutgoingDocument, listDocuments, openDocument } from '../project/documentStore'
 import { adoptImportedProject, importProjectData } from '../project/projectFile'
@@ -170,6 +171,31 @@ export async function ampliarFabrica(store: EditorStore, siguiente: Etapa): Prom
   const etapa = await proyectoDeEtapa(siguiente.orden)
   const ampliada = ampliarProyecto(actual, etapa, { retira: siguiente.retira, ajustes: siguiente.ajustes, fragmento: siguiente.fragmento })
   const doc = currentDocumentId()
+  // la planta ampliada se abre mirando a la zona nueva (sin decoración ni piezas ocultas): FabricaVivaPanel la aplica
+  const propias = new Set(actual.scene.parts.map((p) => p.id))
+  apuntarCamara(viewOfParts(etapa.scene.parts.filter((p) => !propias.has(p.id))))
   const r = await adoptImportedProject({ project: ampliada }, doc ? { docId: doc } : undefined)
   return r.ok ? null : r.message
+}
+
+const CAMARA_KEY = 'fabrica-plc/fabrica-viva-camara'
+type Pose = NonNullable<ReturnType<typeof viewOfParts>>
+
+function apuntarCamara(pose: Pose | null): void {
+  try {
+    if (pose) sessionStorage.setItem(CAMARA_KEY, JSON.stringify(pose))
+  } catch {
+    // sin almacenamiento de sesión la planta se abre con su cámara de siempre
+  }
+}
+
+/** La vista de la zona nueva que dejó apuntada la última ampliación, una sola vez (null si no hay). */
+export function tomarCamaraPendiente(): Pose | null {
+  try {
+    const raw = sessionStorage.getItem(CAMARA_KEY)
+    sessionStorage.removeItem(CAMARA_KEY)
+    return raw ? (JSON.parse(raw) as Pose) : null
+  } catch {
+    return null
+  }
 }

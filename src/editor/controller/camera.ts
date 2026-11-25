@@ -94,6 +94,11 @@ function lineOpeningView(
   return { px: cx + dir.x * dist, py: 0.8 + dir.y * dist, pz: cz + dir.z * dist, tx: cx, ty: 0.8, tz: cz }
 }
 
+/** Fábrica PLC: the view that frames these parts, as a scene with only them would open on (null for none) */
+export function viewOfParts(parts: Parameters<typeof lineOpeningView>[0]): ReturnType<typeof lineOpeningView> {
+  return lineOpeningView(parts)
+}
+
 /** Put the camera on this scene's remembered pose, or its opening view when it has none. */
 export function restoreCamera(c: CameraState, ec: CameraDeps): void {
   const key = viewportKey(ec.store)
