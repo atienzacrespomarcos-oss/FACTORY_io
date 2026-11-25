@@ -1,0 +1,650 @@
+{
+  "version": 4,
+  "parts": [
+    {
+      "id": "bld_1",
+      "type": "building",
+      "position": [
+        24,
+        0,
+        5
+      ],
+      "rotationY": 0,
+      "params": {
+        "lengthSections": 5,
+        "widthSections": 4,
+        "heightSections": 1,
+        "columnSpacing": 0,
+        "rules": [
+          {
+            "wall": "dock_door",
+            "run": 1,
+            "gap": 0,
+            "count": 1,
+            "start": 11,
+            "doorCount": 1,
+            "trailer": true
+          },
+          {
+            "wall": "dock_door",
+            "run": 1,
+            "gap": 0,
+            "count": 1,
+            "start": 15,
+            "doorCount": 2,
+            "trailer": true
+          }
+        ],
+        "floorVisible": true,
+        "wallsVisible": true,
+        "roofVisible": true,
+        "brightness": 1,
+        "backgroundColor": "#9fb1c4",
+        "openDoors": [
+          "11:0"
+        ]
+      },
+      "name": "Nave",
+      "locked": true
+    },
+    {
+      "id": "fv1-alimentador",
+      "type": "part",
+      "packageId": "oip.box-spawner",
+      "position": [
+        0.45,
+        1.25,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "boxesPerMinute": 24,
+        "fixedRate": false,
+        "boxColors": "#c8a06a,#e8a33a,#d9d9d9,#b33a3a,#c8a06a,#e8a33a,#c8a06a,#d9d9d9,#b33a3a,#c8a06a",
+        "keepSpacing": true,
+        "conveyorId": "fv1-cinta-1",
+        "runTag": "Alimentador",
+        "mixAttribute": "code",
+        "mixValues": "101,103,0,104,102,103,101,0,104,102"
+      },
+      "name": "Camión (descarga)"
+    },
+    {
+      "id": "fv1-cinta-1",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        0.085,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaRecepcion",
+        "standHeight": 0.8
+      },
+      "name": "Cinta de recepción 1"
+    },
+    {
+      "id": "fv1-cinta-2",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        5.255,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaRecepcion",
+        "standHeight": 0.8
+      },
+      "name": "Cinta de recepción 2"
+    },
+    {
+      "id": "fv1-fotocelula",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        9.74,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaRecepcion",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula fin de recepción"
+    },
+    {
+      "id": "fv1-marcha",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.3,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "text": "MARCHA",
+        "buttonColor": "#2e9e44",
+        "tag": "Marcha"
+      },
+      "parent": "fv1-cinta-1",
+      "name": "Pulsador Marcha"
+    },
+    {
+      "id": "fv1-paro",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.55,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "text": "PARO",
+        "tag": "Paro"
+      },
+      "parent": "fv1-cinta-1",
+      "name": "Pulsador Paro"
+    },
+    {
+      "id": "fv1-seta",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        0.8,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "emergencyStop": true,
+        "tag": "Seta"
+      },
+      "parent": "fv1-cinta-1",
+      "name": "Seta de emergencia"
+    },
+    {
+      "id": "fv1-baliza",
+      "type": "part",
+      "packageId": "oip.stack-light",
+      "position": [
+        1.2,
+        0.85,
+        -0.79
+      ],
+      "rotationY": 0,
+      "params": {
+        "tag": "Baliza"
+      },
+      "name": "Baliza"
+    },
+    {
+      "id": "fv2-cinta-control",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        10.425,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            6,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaControl"
+      },
+      "name": "Cinta de control"
+    },
+    {
+      "id": "fv2-fotocelula-atasco",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        11.3,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaAtasco",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula de atasco"
+    },
+    {
+      "id": "fv2-fotocelula-rechazo",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        14.63,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaRechazo",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula de rechazo"
+    },
+    {
+      "id": "fv2-desvio",
+      "type": "part",
+      "packageId": "oip.diverter",
+      "position": [
+        15,
+        0.6,
+        1.8755
+      ],
+      "rotationY": 0,
+      "params": {
+        "divertDistance": 1.5,
+        "tag": "Desvio"
+      },
+      "name": "Empujador de rechazo"
+    },
+    {
+      "id": "fv2-cinta-rechazo",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        15.03,
+        0.8,
+        -0.857
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            2.5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaControl"
+      },
+      "name": "Cinta de rechazo"
+    },
+    {
+      "id": "fv2-rearme",
+      "type": "part",
+      "packageId": "oip.push-button",
+      "position": [
+        10.8,
+        0.8,
+        -0.792
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "text": "REARME",
+        "buttonColor": "#1d5fd6",
+        "tag": "Rearme"
+      },
+      "parent": "fv2-cinta-control",
+      "name": "Pulsador Rearme"
+    },
+    {
+      "id": "fv2-lector",
+      "type": "part",
+      "packageId": "oip.barcode-scanner",
+      "position": [
+        13.8,
+        0,
+        0
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "width": 1.8,
+        "readTag": "LecturaOk",
+        "codeTag": "CodigoCaja"
+      },
+      "name": "Lector de códigos"
+    },
+    {
+      "id": "fv2-sumidero-rechazo",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        15.03,
+        0,
+        -4.45
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasRechazadas"
+      },
+      "visible": false,
+      "name": "Sumidero (rechazos)"
+    },
+    {
+      "id": "fv3-cinta-clasif",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        16.595,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            8,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaClasificacion"
+      },
+      "name": "Cinta de clasificación"
+    },
+    {
+      "id": "fv3-fotocelula-expres",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        19.63,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaExpres",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula exprés"
+    },
+    {
+      "id": "fv3-desvio-expres",
+      "type": "part",
+      "packageId": "oip.diverter",
+      "position": [
+        20,
+        0.6,
+        1.8755
+      ],
+      "rotationY": 0,
+      "params": {
+        "divertDistance": 1.5,
+        "tag": "DesvioExpres"
+      },
+      "name": "Empujador exprés"
+    },
+    {
+      "id": "fv3-cinta-expres",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        20.03,
+        0.8,
+        -0.857
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            2.5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaClasificacion"
+      },
+      "name": "Cinta de pedidos exprés"
+    },
+    {
+      "id": "fv3-fotocelula-devol",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        22.23,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaDevol",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula devoluciones"
+    },
+    {
+      "id": "fv3-desvio-devol",
+      "type": "part",
+      "packageId": "oip.diverter",
+      "position": [
+        22.6,
+        0.6,
+        1.8755
+      ],
+      "rotationY": 0,
+      "params": {
+        "divertDistance": 1.5,
+        "tag": "DesvioDevol"
+      },
+      "name": "Empujador devoluciones"
+    },
+    {
+      "id": "fv3-cinta-devol",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        22.63,
+        0.8,
+        -0.857
+      ],
+      "rotationY": 1.570796,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            2.5,
+            0
+          ]
+        ],
+        "speed": 1,
+        "runTag": "CintaClasificacion"
+      },
+      "name": "Cinta de devoluciones"
+    },
+    {
+      "id": "fv3-sumidero-expres",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        20.03,
+        0,
+        -4.45
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasExpres"
+      },
+      "visible": false,
+      "name": "Sumidero (exprés)"
+    },
+    {
+      "id": "fv3-sumidero-devol",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        22.63,
+        0,
+        -4.45
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasDevueltas"
+      },
+      "visible": false,
+      "name": "Sumidero (devoluciones)"
+    },
+    {
+      "id": "fv4-rodillos",
+      "type": "part",
+      "packageId": "oip.roller-conveyor",
+      "position": [
+        27.68,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "length": 6,
+        "runTag": "RodillosPulmon"
+      },
+      "name": "Rodillos del pulmón"
+    },
+    {
+      "id": "fv4-tope",
+      "type": "part",
+      "packageId": "oip.blade-stop",
+      "position": [
+        31.4,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "tag": "TopePulmon",
+        "width": 1.494
+      },
+      "name": "Tope del pulmón"
+    },
+    {
+      "id": "fv4-fotocelula-entrada",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        25,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaEntradaPulmon",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula entrada pulmón"
+    },
+    {
+      "id": "fv4-fotocelula-lleno",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        28.1,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaLleno",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula pulmón lleno"
+    },
+    {
+      "id": "fv4-fotocelula-tope",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        31.25,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaTope",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula del tope"
+    },
+    {
+      "id": "fv4-cinta-salida",
+      "type": "part",
+      "packageId": "oip.belt-conveyor",
+      "position": [
+        30.765,
+        0.8,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "fpmUnits": false,
+        "segments": [
+          [
+            3,
+            0
+          ]
+        ],
+        "runTag": "CintaSalidaPulmon",
+        "speed": 2
+      },
+      "name": "Cinta de salida del pulmón"
+    },
+    {
+      "id": "fv4-fotocelula-salida",
+      "type": "part",
+      "packageId": "oip.diffuse-sensor",
+      "position": [
+        32.7,
+        0.78,
+        0.819
+      ],
+      "rotationY": 3.141593,
+      "params": {
+        "tag": "FotocelulaSalidaPulmon",
+        "maxRange": 1.564
+      },
+      "name": "Fotocélula salida pulmón"
+    },
+    {
+      "id": "fv4-sumidero-final",
+      "type": "part",
+      "packageId": "oip.despawner",
+      "position": [
+        34.9,
+        0,
+        0
+      ],
+      "rotationY": 0,
+      "params": {
+        "countTag": "CajasAPaletizar"
+      },
+      "visible": false,
+      "name": "Sumidero (a paletizar)"
+    }
+  ]
+}

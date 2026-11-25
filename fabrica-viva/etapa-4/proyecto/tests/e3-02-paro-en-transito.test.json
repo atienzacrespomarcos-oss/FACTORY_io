@@ -1,0 +1,254 @@
+{
+  "name": "E3 · Al parar con cajas en camino y volver a arrancar, cada caja sigue yendo a su destino",
+  "duration": 120,
+  "inputs": [
+    {
+      "at": 1.0,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 1.3,
+      "tag": "Marcha",
+      "value": false
+    },
+    {
+      "at": 38.0,
+      "tag": "Paro",
+      "value": true
+    },
+    {
+      "at": 38.3,
+      "tag": "Paro",
+      "value": false
+    },
+    {
+      "at": 50.0,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 50.3,
+      "tag": "Marcha",
+      "value": false
+    }
+  ],
+  "checks": [
+    {
+      "eventually": true,
+      "min": 3,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              19.3,
+              0.85,
+              -2.6
+            ],
+            "max": [
+              20.8,
+              1.4,
+              -2.45
+            ]
+          },
+          "color": "#e8a33a"
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              19.3,
+              0.85,
+              -2.6
+            ],
+            "max": [
+              20.8,
+              1.4,
+              -2.45
+            ]
+          },
+          "color": "#b33a3a"
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              19.3,
+              0.85,
+              -2.6
+            ],
+            "max": [
+              20.8,
+              1.4,
+              -2.45
+            ]
+          },
+          "color": "#c8a06a"
+        }
+      }
+    },
+    {
+      "eventually": true,
+      "min": 3,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              21.9,
+              0.85,
+              -2.6
+            ],
+            "max": [
+              23.4,
+              1.4,
+              -2.45
+            ]
+          },
+          "color": "#b33a3a"
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              21.9,
+              0.85,
+              -2.6
+            ],
+            "max": [
+              23.4,
+              1.4,
+              -2.45
+            ]
+          },
+          "color": "#e8a33a"
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              21.9,
+              0.85,
+              -2.6
+            ],
+            "max": [
+              23.4,
+              1.4,
+              -2.45
+            ]
+          },
+          "color": "#c8a06a"
+        }
+      }
+    },
+    {
+      "eventually": true,
+      "min": 4,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              24.3,
+              0.85,
+              -0.6
+            ],
+            "max": [
+              24.45,
+              1.4,
+              0.6
+            ]
+          },
+          "color": "#c8a06a"
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              24.3,
+              0.85,
+              -0.6
+            ],
+            "max": [
+              24.45,
+              1.4,
+              0.6
+            ]
+          },
+          "color": "#e8a33a"
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "passed": {
+          "zone": {
+            "min": [
+              24.3,
+              0.85,
+              -0.6
+            ],
+            "max": [
+              24.45,
+              1.4,
+              0.6
+            ]
+          },
+          "color": "#b33a3a"
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              -1,
+              -1,
+              -6
+            ],
+            "max": [
+              27,
+              0.45,
+              6
+            ]
+          }
+        }
+      }
+    },
+    {
+      "always": true,
+      "from": 38.3,
+      "until": 49.9,
+      "tag": "CintaClasificacion",
+      "equals": false
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "name": "E4 · El pulmón suelta las cajas de una en una, como mucho una cada 10 s, y frena la descarga cuando se llena",
+  "duration": 240,
+  "inputs": [
+    {
+      "at": 1.0,
+      "tag": "Marcha",
+      "value": true
+    },
+    {
+      "at": 1.3,
+      "tag": "Marcha",
+      "value": false
+    }
+  ],
+  "checks": [
+    {
+      "always": true,
+      "max": 1,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              31.75,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              33.8,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "at": 100,
+      "tag": "CajasAPaletizar",
+      "max": 7
+    },
+    {
+      "at": 200,
+      "tag": "CajasAPaletizar",
+      "max": 17
+    },
+    {
+      "eventually": true,
+      "tag": "CajasAPaletizar",
+      "min": 12
+    },
+    {
+      "eventually": true,
+      "tag": "Pulmon.Estado",
+      "equals": 2
+    },
+    {
+      "eventually": true,
+      "tag": "PulmonLleno",
+      "equals": true
+    },
+    {
+      "eventually": true,
+      "from": 60,
+      "tag": "Alimentador",
+      "equals": false
+    },
+    {
+      "eventually": true,
+      "from": 120,
+      "tag": "Alimentador",
+      "equals": true
+    },
+    {
+      "eventually": true,
+      "tag": "Baliza",
+      "equals": 3
+    },
+    {
+      "always": true,
+      "max": 11,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              24.7,
+              0.85,
+              -0.7
+            ],
+            "max": [
+              31.7,
+              1.4,
+              0.7
+            ]
+          }
+        }
+      }
+    },
+    {
+      "always": true,
+      "max": 0,
+      "probe": {
+        "count": {
+          "zone": {
+            "min": [
+              -1,
+              -1,
+              -6
+            ],
+            "max": [
+              36,
+              0.45,
+              6
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

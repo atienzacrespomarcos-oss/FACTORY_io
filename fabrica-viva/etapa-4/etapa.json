@@ -1,0 +1,32 @@
+{
+  "orden": 4,
+  "titulo": "Pulmón",
+  "encargo": "El paletizado que vendrá trabaja más despacio de lo que llega. Pon un pulmón al final de la línea: unos rodillos que acumulan los pedidos normales y un tope que los suelta de uno en uno, como mucho uno cada 10 s. Si el pulmón se llena, frena la descarga del camión hasta que haya sitio.",
+  "objetivos": [
+    {
+      "etiqueta": "Cajas entregadas al paletizado",
+      "tag": "CajasAPaletizar",
+      "meta": 10
+    }
+  ],
+  "aprenderas": [
+    "Máquinas de estados con CASE",
+    "Temporizadores dentro de un bloque de función",
+    "Histéresis: entrar y salir de un estado con condiciones distintas",
+    "Leer el estado de una instancia (Pulmon.Estado)"
+  ],
+  "pistas": [
+    "En el estado 1 (liberando), TopePulmon abajo y rodillos parados: la caja del tope ya está sobre la cinta de salida y se va sola; la siguiente se queda quieta sobre los rodillos.",
+    "El ritmo: un TON con IN := Pulmon.Estado = 0 y PT := T#10s. Su salida Q es el Permiso.",
+    "Llama a los temporizadores siempre, fuera de los IF y del CASE: un TON que no se llama en un scan no ve caer su entrada.",
+    "PulmonLleno con dos TON, uno sobre la fotocélula tapada (2 s) y otro sobre libre (3 s): el primero lo pone a TRUE y el segundo a FALSE. Luego Alimentador := EnMarcha AND NOT PulmonLleno."
+  ],
+  "retira": [
+    "fv3-sumidero-final"
+  ],
+  "ajustes": [],
+  "flujoAnterior": [
+    "e3-01-clasificacion.test.json",
+    "e3-02-paro-en-transito.test.json"
+  ]
+}
