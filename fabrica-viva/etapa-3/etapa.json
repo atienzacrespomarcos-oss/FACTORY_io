@@ -27,7 +27,8 @@
   "pistas": [
     "Entre el lector y el primer empujador caben 4 o 5 cajas: guarda sus códigos en orden, en un ARRAY.",
     "Para sacar el primero de la cola, desplaza cada elemento un puesto hacia delante con un FOR y resta 1 a Cantidad. Para meter, escribe en Datos[Cantidad] y suma 1.",
-    "Al llegar una caja a la fotocélula exprés, mira ColaA.Primero ANTES de llamar a ColaA con Sacar: ese es su código. Si no es 103, ese código pasa a ColaB."
+    "Al llegar una caja a la fotocélula exprés, mira ColaA.Primero ANTES de llamar a ColaA con Sacar: ese es su código. Si no es 103, ese código pasa a ColaB.",
+    "Empujes cortos (unos 0,6 s): con las cajas muy juntas, un empujador que vuelve tarde roza la caja siguiente, la tuerce y más adelante esa caja atasca la línea."
   ],
   "retira": [
     "fv2-sumidero-final"

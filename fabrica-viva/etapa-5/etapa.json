@@ -1,0 +1,44 @@
+{
+  "orden": 5,
+  "titulo": "Paletizado con robot",
+  "encargo": "Llega un robot paletizador. Coge cada pedido normal al final de la cinta de salida y lo apila en un palé europeo, dos capas de 2 × 2 cajas. Gestiona también los palés: pide uno vacío al dispensador, llévalo hasta el robot y saca el palé cuando esté lleno.",
+  "objetivos": [
+    {
+      "etiqueta": "Cajas paletizadas",
+      "tag": "CajasPaletizadas",
+      "meta": 16
+    },
+    {
+      "etiqueta": "Palés completos",
+      "tag": "PalesCompletos",
+      "meta": 2
+    }
+  ],
+  "aprenderas": [
+    "Intercambio de señales con un robot: orden, ejecutar y hecho",
+    "Dos secuencias que se coordinan (robot y palés)",
+    "Flancos: mantener una orden hasta ver la respuesta",
+    "Cambiar código ya hecho cuando la planta crece"
+  ],
+  "pistas": [
+    "El robot ya tiene sus trabajos enseñados: el 1 recoge y el 2 + Colocadas deja la caja en su hueco. Tú solo eliges el número y das la orden.",
+    "Si pulsas Ejecutar un solo ciclo, el robot puede no verlo: mantenlo a TRUE hasta que RobotListo caiga, y entonces espera a que vuelva a TRUE.",
+    "La cinta de salida: CintaSalidaPulmon := EnMarcha AND NOT FotocelulaPicking. En el pulmón conviene Permiso := Ritmo.Q AND NOT FotocelulaPicking, para no bajar el tope con la cinta parada.",
+    "Palés: un CASE PasoPale con 0 pedir, 1 DarPale hasta que DispensadorOcupado suba, 2 esperar a que baje, 3 rodillos hasta que PalePresente lleve 2 s, 4 cargar (PaleListo para el robot), 5 tope abajo y rodillos hasta que PalePresente lleve 3 s libre."
+  ],
+  "retira": [
+    "fv4-sumidero-final"
+  ],
+  "ajustes": [
+    {
+      "id": "fv4-cinta-salida",
+      "params": {
+        "speed": 1,
+        "decelTime": 0.05
+      }
+    }
+  ],
+  "flujoAnterior": [
+    "e4-01-pulmon.test.json"
+  ]
+}

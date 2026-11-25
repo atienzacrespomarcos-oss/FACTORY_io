@@ -99,5 +99,5 @@ Retardo(IN := Pendiente, PT := T#450ms);
 IF Retardo.Q OR NOT EnMarcha THEN
   Pendiente := FALSE;
 END_IF;
-Empuje(IN := Retardo.Q, PT := T#1s);
+Empuje(IN := Retardo.Q, PT := T#600ms);
 Desvio := Empuje.Q AND EnMarcha;

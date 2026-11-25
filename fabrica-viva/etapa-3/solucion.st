@@ -150,7 +150,7 @@ Retardo(IN := Pendiente, PT := T#450ms);
 IF Retardo.Q OR NOT EnMarcha THEN
   Pendiente := FALSE;
 END_IF;
-Empuje(IN := Retardo.Q, PT := T#1s);
+Empuje(IN := Retardo.Q, PT := T#600ms);
 Desvio := Empuje.Q AND EnMarcha;
 
 (* Etapa 3. Primero se detectan las llegadas; después se decide con la cabeza de cada cola (el código de la
@@ -173,11 +173,11 @@ RetardoA(IN := PendienteA, PT := T#450ms);
 IF RetardoA.Q OR NOT EnMarcha THEN
   PendienteA := FALSE;
 END_IF;
-EmpujeA(IN := RetardoA.Q, PT := T#1s);
+EmpujeA(IN := RetardoA.Q, PT := T#600ms);
 DesvioExpres := EmpujeA.Q AND EnMarcha;
 RetardoB(IN := PendienteB, PT := T#450ms);
 IF RetardoB.Q OR NOT EnMarcha THEN
   PendienteB := FALSE;
 END_IF;
-EmpujeB(IN := RetardoB.Q, PT := T#1s);
+EmpujeB(IN := RetardoB.Q, PT := T#600ms);
 DesvioDevol := EmpujeB.Q AND EnMarcha;
