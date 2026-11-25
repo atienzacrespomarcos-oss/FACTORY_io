@@ -75,7 +75,11 @@ for (const n of etapas) {
     const antiguas = Object.keys(ini).filter((f) => !f.startsWith(`e${n}-`))
     if (nuevas.length === 0) problemas.push('la etapa no tiene pruebas propias (e' + n + '-*)')
     if (nuevas.every((f) => ini[f])) problemas.push('el punto de partida ya pasa las pruebas nuevas: no exigen trabajo')
-    const rotas = antiguas.filter((f) => !ini[f])
+    // las pruebas de flujo anteriores que necesitan la zona nueva funcionando para llegar a su cifra (etapa.json
+    // `flujoAnterior`): se exigen con la solución, no con la zona nueva sin programar
+    const metaEtapa = JSON.parse(readFileSync(join(dir, 'etapa.json'), 'utf8'))
+    const flujo = new Set(metaEtapa.flujoAnterior ?? [])
+    const rotas = antiguas.filter((f) => !ini[f] && !flujo.has(f))
     if (rotas.length) problemas.push(`la ampliación rompe pruebas anteriores con la solución previa: ${rotas.join(', ')}`)
 
     // 3. ampliar la planta de la etapa anterior da exactamente la planta validada de esta etapa

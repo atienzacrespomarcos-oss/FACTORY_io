@@ -1,0 +1,47 @@
+{
+  "orden": 3,
+  "titulo": "Clasificación",
+  "encargo": "Llegan pedidos exprés (cajas naranjas, código 103) y devoluciones (cajas rojas, código 104) mezclados con los pedidos normales. Amplía la línea con una zona de clasificación que mande cada caja a su sitio, aunque haya varias cajas en camino a la vez.",
+  "objetivos": [
+    {
+      "etiqueta": "Pedidos exprés separados",
+      "tag": "CajasExpres",
+      "meta": 8
+    },
+    {
+      "etiqueta": "Devoluciones separadas",
+      "tag": "CajasDevueltas",
+      "meta": 8
+    },
+    {
+      "etiqueta": "Pedidos normales al final",
+      "tag": "CajasPedidos",
+      "meta": 15
+    }
+  ],
+  "aprenderas": [
+    "Arrays (ARRAY) y bucles FOR",
+    "Una cola FIFO en un bloque de función reutilizable",
+    "Orden de las instrucciones dentro del ciclo de scan"
+  ],
+  "pistas": [
+    "Entre el lector y el primer empujador caben 4 o 5 cajas: guarda sus códigos en orden, en un ARRAY.",
+    "Para sacar el primero de la cola, desplaza cada elemento un puesto hacia delante con un FOR y resta 1 a Cantidad. Para meter, escribe en Datos[Cantidad] y suma 1.",
+    "Al llegar una caja a la fotocélula exprés, mira ColaA.Primero ANTES de llamar a ColaA con Sacar: ese es su código. Si no es 103, ese código pasa a ColaB."
+  ],
+  "retira": [
+    "fv2-sumidero-final"
+  ],
+  "ajustes": [
+    {
+      "id": "fv1-alimentador",
+      "params": {
+        "mixValues": "101,103,0,104,102,103,101,0,104,102",
+        "boxColors": "#c8a06a,#e8a33a,#d9d9d9,#b33a3a,#c8a06a,#e8a33a,#c8a06a,#d9d9d9,#b33a3a,#c8a06a"
+      }
+    }
+  ],
+  "flujoAnterior": [
+    "e2-01-rechazo.test.json"
+  ]
+}
